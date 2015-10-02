@@ -9,8 +9,7 @@ import presenter.Presenter;
 import view.CLI;
 import view.CLIObservableView;
 
-public class Run {//TEST!
-//omer
+public class Run {
 	public static void main(String[] args) throws InterruptedException {
 		CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
 		Maze3dModel model = new Maze3dModel();
