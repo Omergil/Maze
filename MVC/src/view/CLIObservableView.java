@@ -28,28 +28,34 @@ public class CLIObservableView extends Observable implements View {
 		this.cli = cli;
 		this.cli.setView(this);
 	}
-	
-	@Override
-	public void displayData(int[][][] data) {
-		for (int i = 0; i < data[0][0].length;i++)
-		{
-			for (int j = 0; j < data[0].length; j++)
-			{
-				for (int k = 0; k < data.length; k++)
-				{
-					System.out.println(data[k][j][i]);
-				}
-			}
-		}
-	}
 
 	@Override
 	public String getUserCommand() {
 		return userInput;
 	}
 
+	//OMER
 	@Override
-	public void displayMessage(String message) {
-		System.out.println(message);
+	public void displayData(Object data) {
+		if (data instanceof String)
+		{
+			System.out.println(data);			
+		}
+		else if (data instanceof int[][][])
+		{
+			int[][][] maze = (int[][][]) data;
+			for (int floors = 0; floors < maze[0][0].length; floors++)
+			{
+				for (int height = maze.length - 1; height >= 0; height--)
+				{
+					for (int width = 0; width < maze[0].length; width++)
+					{
+						System.out.print(" " + maze[height][width][floors] + " ");
+					}
+					System.out.println();
+				}
+				System.out.println("\n");
+			}
+		}
 	}
 }

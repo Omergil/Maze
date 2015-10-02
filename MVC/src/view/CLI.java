@@ -39,6 +39,7 @@ public class CLI extends Thread{
 			@Override
 			public void run() {
 				try{
+					System.out.println("Type \"help\" for help.");
 					while(!(line=in.readLine()).equals("exit")){
 						view.setUserInput(line);
 					}

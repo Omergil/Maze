@@ -22,4 +22,10 @@ public class Maze3dModel extends Observable implements Model {
 		setChanged();
 		notifyObservers("maze " + name + " is ready");
 	}
+
+	//OMER
+	@Override
+	public int[][][] display(String name) {
+		return mazeStore.get(name).getMaze3d();
+	}
 }

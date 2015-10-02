@@ -3,6 +3,8 @@ package boot;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
+
+import algorithms.mazeGenerators.MyMaze3dGenerator;
 import model.Maze3dModel;
 import presenter.Command;
 import presenter.Presenter;
