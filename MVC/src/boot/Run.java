@@ -9,7 +9,7 @@ import presenter.Presenter;
 import view.CLI;
 import view.CLIObservableView;
 
-public class Run {//test2!!!
+public class Run {//test!!2!!!
 
 	public static void main(String[] args) throws InterruptedException {
 		CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
