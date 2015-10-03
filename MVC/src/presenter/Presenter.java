@@ -22,11 +22,14 @@ public class Presenter implements Observer {
 		setHashMap();
 	}
 	
-	//OMER
+	//OMER //Daniel
 	private void setHashMap() {
 		hashMap.put("generate", new Generate());
 		hashMap.put("help", new Help());
 		hashMap.put("display", new Display());
+		hashMap.put("save", new SaveMaze());
+		hashMap.put("dir", new Dir());
+		hashMap.put("maze", new MazeSize());
 	}
 
 	//OMER
@@ -82,14 +85,17 @@ public class Presenter implements Observer {
 	  return true;  
 	}
 	
-	//OMER
+	//OMER //Daniel
 	private class Help implements Command
 	{
 		@Override
 		public void doCommand() {
 			ui.displayData("Available commands:\n" +
 					"generate 3d maze <name> <width> <height> <floors>\n" +
-					"display <name>");
+					"display <name>\n" +
+					"save maze <name> <file name>\n" +
+					"dir <path>\n" +
+					"maze size <name>\n");
 		}
 	}
 	
@@ -119,4 +125,34 @@ public class Presenter implements Observer {
 			ui.displayData(model.display(arguments.get(1)));
 		}
 	}
+	
+	//Daniel
+	private class SaveMaze implements Command
+	{
+		@Override
+		public void doCommand() {
+			model.savemaze(arguments.get(2), arguments.get(3));
+		}
+	}
+	
+	//Daniel
+	private class Dir implements Command
+	{
+		@Override
+		public void doCommand() {
+			ui.displayFiles(model.dir(arguments.get(1)));
+		}
+	}
+	
+	//Daniel
+	private class MazeSize implements Command
+	{
+		@Override
+		public void doCommand() {
+			model.mazesize(arguments.get(2));
+		}
+	}
+	
+	
+	
 }
