@@ -58,4 +58,11 @@ public class CLIObservableView extends Observable implements View {
 			}
 		}
 	}
+
+	//Daniel
+	@Override
+	public void displayFiles(String[] fileslist) {
+		for(int i=0; i < fileslist.length-1; i++)
+			System.out.println(fileslist[i]);
+	}
 }
