@@ -32,6 +32,7 @@ public class Presenter implements Observer {
 		hashMap.put("maze", new MazeSize());
 		hashMap.put("load", new LoadMaze());
 		hashMap.put("file", new FileSize());
+		hashMap.put("solve", new Solve());
 		hashMap.put("exit", new Exit());
 	}
 
@@ -94,13 +95,16 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			ui.displayData("Available commands:\n" +
-					"generate 3d maze <name> <width> <height> <floors>\n" +
-					"display <name>\n" +
-					"save maze <name> <file name>\n" +
 					"dir <path>\n" +
-					"maze size <name>\n" +
-					"load maze <filename> <name>\n" +
-					"file size <name>\n" +
+					"generate 3d maze <maze_name> <width> <height> <floors>\n" +
+					"display <maze_name>\n" +
+					"display cross section by <X\\Y\\Z> <index> for <maze_name>\n" +
+					"save maze <maze_name> <file_name>\n" +
+					"load maze <file_name> <maze_name>\n" +
+					"maze size <maze_name>\n" +
+					"file size <file_name>\n" +
+					"solve <name> <BFS\\Manhattan\\Air>\n" +
+					"display solution <maze_name>\n" +
 					"exit");
 		}
 	}
@@ -128,7 +132,21 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			ui.displayData(model.display(arguments.get(1)));
+			if (arguments.size() == 2)
+			{
+				ui.displayData(model.display(arguments.get(1)));				
+			}
+			else if ((arguments.get(1).toLowerCase().equals("cross")) && (arguments.get(2).toLowerCase().equals("section")) &&
+					(arguments.get(3).toLowerCase().equals("by")) && ((arguments.get(4).toLowerCase().equals("x")) || 
+					(arguments.get(4).toLowerCase().equals("y")) || (arguments.get(4).toLowerCase().equals("z"))) &&
+					isNumeric(arguments.get(5)) && arguments.get(6).toLowerCase().equals("for") && (arguments.size() == 8))
+			{
+				ui.displayData(model.displayCrossSection(arguments.get(4), Integer.parseInt(arguments.get(5)), arguments.get(7)));
+			}
+			else if ((arguments.get(1).toLowerCase().equals("solution")) && (arguments.size() == 3))
+			{
+				ui.displayData(model.displaySolution(arguments.get(2)));
+			}
 		}
 	}
 	
@@ -137,10 +155,14 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))	
-				model.savemaze(arguments.get(2), arguments.get(3));
+			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))
+			{
+				model.saveMaze(arguments.get(2), arguments.get(3));				
+			}
 			else
-				wrongInput();
+			{
+				wrongInput();				
+			}
 		}
 	}
 	
@@ -150,9 +172,13 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			if (arguments.size() == 2)
+			{
 				ui.displayFiles(model.dir(arguments.get(1)));
+			}
 			else
+			{
 				wrongInput();
+			}
 		}
 	}
 	
@@ -162,7 +188,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			if ((arguments.get(1).equals("size")) && (arguments.size() == 3))
-				model.mazesize(arguments.get(2));
+				model.mazeSize(arguments.get(2));
 			else
 				wrongInput();
 		}
@@ -173,7 +199,7 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))
-				model.loadmaze(arguments.get(2), arguments.get(3));
+				model.loadMaze(arguments.get(2), arguments.get(3));
 			else
 				wrongInput();
 		}
@@ -183,9 +209,25 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			if ((arguments.get(1).equals("size")) && (arguments.size() == 3))
-				model.filesize(arguments.get(2));
+				model.fileSize(arguments.get(2));
 			else
 				wrongInput();
+		}
+	}
+	
+	public class Solve implements Command
+	{
+		@Override
+		public void doCommand() {
+			if ((arguments.size() == 3) && ((arguments.get(2).toLowerCase().equals("bfs")) || 
+					(arguments.get(2).toLowerCase().equals("manhattan")) || (arguments.get(2).toLowerCase().equals("air"))))
+			{
+				model.solve(arguments.get(1), arguments.get(2));		
+			}
+			else
+			{
+				wrongInput();
+			}
 		}
 	}
 	

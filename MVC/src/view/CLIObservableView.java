@@ -2,6 +2,8 @@ package view;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 public class CLIObservableView extends Observable implements View {
@@ -55,6 +57,26 @@ public class CLIObservableView extends Observable implements View {
 					System.out.println();
 				}
 				System.out.println("\n");
+			}
+		}
+		else if (data instanceof int[][])
+		{
+			int[][] maze2d = (int[][]) data;
+			for (int i = 0; i < maze2d.length; i++)
+			{
+				for (int j = 0; j < maze2d[0].length; j++)
+				{
+					System.out.print(" " + maze2d[i][j] + " ");
+				}
+				System.out.println("\n");
+			}
+		}
+		else if (data instanceof List)
+		{
+			ArrayList<String> states = (ArrayList<String>) data;
+			for (String state : states)
+			{
+				System.out.println(state);
 			}
 		}
 	}
