@@ -7,4 +7,8 @@ public interface Model {
 	void savemaze(String name, String filename);//Daniel
 	String[] dir(String path); //daniel
 	void mazesize(String name); //daniel
+	void loadmaze(String filename, String name);//Daniel
+	void filesize(String filename); //daniel
+	void exit(); //daniel
+
 }

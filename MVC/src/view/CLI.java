@@ -32,7 +32,7 @@ public class CLI extends Thread{
 		this.out = new PrintWriter(new OutputStreamWriter(out));
 	}
 
-	// Get input from user until 'exit'
+	// Get input from user until 'exit!'
 	private void runCLIInThread()
 	{
 		new Thread(new Runnable() {
@@ -40,7 +40,7 @@ public class CLI extends Thread{
 			public void run() {
 				try{
 					System.out.println("Type \"help\" for help.");
-					while(!(line=in.readLine()).equals("exit")){
+					while(!(line=in.readLine()).equals("exit!")){
 						view.setUserInput(line);
 					}
 				}catch(Exception e){}

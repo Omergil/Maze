@@ -30,6 +30,9 @@ public class Presenter implements Observer {
 		hashMap.put("save", new SaveMaze());
 		hashMap.put("dir", new Dir());
 		hashMap.put("maze", new MazeSize());
+		hashMap.put("load", new LoadMaze());
+		hashMap.put("file", new FileSize());
+		hashMap.put("exit", new Exit());
 	}
 
 	//OMER
@@ -95,7 +98,10 @@ public class Presenter implements Observer {
 					"display <name>\n" +
 					"save maze <name> <file name>\n" +
 					"dir <path>\n" +
-					"maze size <name>\n");
+					"maze size <name>\n" +
+					"load maze <filename> <name>\n" +
+					"file size <name>\n" +
+					"exit");
 		}
 	}
 	
@@ -131,7 +137,10 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			model.savemaze(arguments.get(2), arguments.get(3));
+			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))	
+				model.savemaze(arguments.get(2), arguments.get(3));
+			else
+				wrongInput();
 		}
 	}
 	
@@ -140,7 +149,10 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			ui.displayFiles(model.dir(arguments.get(1)));
+			if (arguments.size() == 2)
+				ui.displayFiles(model.dir(arguments.get(1)));
+			else
+				wrongInput();
 		}
 	}
 	
@@ -149,10 +161,44 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			model.mazesize(arguments.get(2));
+			if ((arguments.get(1).equals("size")) && (arguments.size() == 3))
+				model.mazesize(arguments.get(2));
+			else
+				wrongInput();
 		}
 	}
 	
+	public class LoadMaze implements Command
+	{
+		@Override
+		public void doCommand() {
+			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))
+				model.loadmaze(arguments.get(2), arguments.get(3));
+			else
+				wrongInput();
+		}
+	}
+	
+	public class FileSize implements Command{
+		@Override
+		public void doCommand() {
+			if ((arguments.get(1).equals("size")) && (arguments.size() == 3))
+				model.filesize(arguments.get(2));
+			else
+				wrongInput();
+		}
+	}
+	
+	public class Exit implements Command{
+
+		@Override
+		public void doCommand() {
+			if(arguments.size() == 1)
+				model.exit();
+			else
+				wrongInput();
+		}
+	}
 	
 	
 }
