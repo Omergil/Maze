@@ -6,8 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+/**
+ * View layer of MVP architecture.
+ * <p>
+ * In charge of presenting data to the client.<br>
+ * Object adapter for CLI and Observable.
+ */
 public class CLIObservableView extends Observable implements View {
 
+	/**
+	 * Getter for the CLI object.
+	 * @return CLI object.
+	 */
 	public CLI getCli() {
 		return cli;
 	}
@@ -15,10 +25,17 @@ public class CLIObservableView extends Observable implements View {
 	CLI cli;
 	String userInput;
 	
+	/**
+	 * Getter for the user input.
+	 * @return String (user input).
+	 */
 	public String getUserInput() {
 		return userInput;
 	}
 
+	/**
+	 * Sets the userInput String.
+	 */
 	@Override
 	public void setUserInput(String userInput) {
 		this.userInput = userInput;
@@ -26,6 +43,10 @@ public class CLIObservableView extends Observable implements View {
 		notifyObservers();
 	}
 
+	/**
+	 * Constructor for the CLIObservableView object.
+	 * @param cli
+	 */
 	public CLIObservableView(CLI cli) {
 		this.cli = cli;
 		this.cli.setView(this);
@@ -36,7 +57,11 @@ public class CLIObservableView extends Observable implements View {
 		return userInput;
 	}
 
-	//OMER
+	/**
+	 * Display data received from the presenter layer.
+	 * <p>
+	 * The data is printed to the screen by its type - int[][][], int[][], String, etc.
+	 */
 	@Override
 	public void displayData(Object data) {
 		if (data instanceof String)
@@ -79,12 +104,11 @@ public class CLIObservableView extends Observable implements View {
 				System.out.println(state);
 			}
 		}
-	}
-
-	//Daniel
-	@Override
-	public void displayFiles(String[] fileslist) {
-		for(int i=0; i < fileslist.length-1; i++)
-			System.out.println(fileslist[i]);
+		else if (data instanceof String[])
+		{
+			String[] strings = (String[]) data;
+			for(int i=0; i < strings.length-1; i++)
+				System.out.println(strings[i]);
+		}
 	}
 }

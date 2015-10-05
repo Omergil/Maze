@@ -3,19 +3,11 @@ package model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.instrument.Instrumentation;
-import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Observable;
-import java.util.concurrent.Executor;
-
-import javax.naming.SizeLimitExceededException;
-
 import algorithms.demo.Maze3dSearchable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
@@ -28,94 +20,19 @@ import algorithms.search.State;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
 
+/**
+ * Model object for MVP architecture, specifically for Maze3d.
+ */
 public class Maze3dModel extends Observable implements Model {
 
-	int [][][] test = new int[1][2][3];// DELETE
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
-	private static Instrumentation inst;
-	
-	@Override
-	public int[][][] getData() {
-		return test;
-	}
 
-	@Override
-	public void generate(String name, int width, int height, int floors) {
-		if ((width >= 2) && (height >= 2) && (floors >= 2))
-		{
-			new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					mazeStore.put(name, new MyMaze3dGenerator(width, height, floors).generate());
-					setChanged();
-					notifyObservers("maze " + name + " is ready");	
-				}
-			}).start();		
-		}
-		else
-		{
-			setChanged();
-			notifyObservers("Invalid maze size.");
-		}
-	}
 
-	//OMER
-	@Override
-	public int[][][] display(String name) {
-		return mazeStore.get(name).getMaze3d();
-	}
-	
-	@Override
-	public int[][] displayCrossSection(String coordinate, int index, String maze)
-	{
-		if (mazeStore.containsKey(maze))
-		{
-			if (coordinate.toLowerCase().equals("x"))
-			{
-				return mazeStore.get(maze).getCrossSectionByX(index);
-			}
-			else if (coordinate.toLowerCase().equals("y"))
-			{
-				return mazeStore.get(maze).getCrossSectionByY(index);
-			}
-			else if (coordinate.toLowerCase().equals("z"))
-			{
-				return mazeStore.get(maze).getCrossSectionByZ(index);
-			}
-		}
-		setChanged();
-		notifyObservers("Unable to complete operation.");
-		return null;
-	}
-
-	//Daniel
-	@Override
-	public void saveMaze(String name, String filename) {
-		//Check that the maze exist in the store
-		if (!mazeStore.containsKey(name))
-		{
-			setChanged();
-			notifyObservers("Maze does not exist.");
-		}
-		//Save the maze in file
-		else
-		{
-			try{
-				OutputStream out = new MyCompressorOutputStream(new FileOutputStream(filename));
-				out.write(mazeStore.get(name).toByteArray());
-				out.flush();
-				out.close();
-				setChanged();
-				notifyObservers("Maze " + name + " saved.");
-			}catch(Exception e){
-				setChanged();
-				notifyObservers("Maze could not be saved.");}
-		}
-	}
-
-	//daniel
+	/**
+	 * Returns all files and folders for a given path on the file system.
+	 * @return Array of Strings.
+	 */
 	@Override
 	public String[] dir(String path) {
 		String[] fileslist;
@@ -140,28 +57,109 @@ public class Maze3dModel extends Observable implements Model {
 			return null;
 		}
 	}
-
-	//daniel
+	
+	/**
+	 * Generates a new maze.
+	 * <p>
+	 * The method generates a new Maze3d object.
+	 * The Maze3d object is added to mazeStore HashMap, containing the maze name and Maze3d object.
+	 * Notifies presenter when maze is ready.  
+	 */
 	@Override
-	public void mazeSize(String name) {
-		Maze3d temp;
-		long size;
-		//Check that the maze exist
-		if (!mazeStore.containsKey(name))
+	public void generate(String name, int width, int height, int floors) {
+		if ((width >= 2) && (height >= 2) && (floors >= 2))
 		{
-			setChanged();
-			notifyObservers("The maze does not exist.");
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					mazeStore.put(name, new MyMaze3dGenerator(width, height, floors).generate());
+					setChanged();
+					notifyObservers("maze " + name + " is ready");	
+				}
+			}).start();		
 		}
-		//calculate the size of maze
 		else
 		{
-			temp = mazeStore.get(name);
-			size = temp.toByteArray().length;
 			setChanged();
-			notifyObservers("\"" + name + "\" maze size: " + size + " bytes.");
+			notifyObservers("Invalid maze size.");
 		}
 	}
 
+	/**
+	 * Displays the maze to the view layer.
+	 * @return The maze itself represented by int[][][].
+	 */
+	@Override
+	public int[][][] display(String name) {
+		return mazeStore.get(name).getMaze3d();
+	}
+	
+	/**
+	 * Displays a cross section to the view layer.
+	 * <p>
+	 * Notifies the presenter if operation is failed. 
+	 * @return 2d array containing cross section maze.
+	 */
+	@Override
+	public int[][] displayCrossSection(String coordinate, int index, String maze)
+	{
+		if (mazeStore.containsKey(maze))
+		{
+			if (coordinate.toLowerCase().equals("x"))
+			{
+				return mazeStore.get(maze).getCrossSectionByX(index);
+			}
+			else if (coordinate.toLowerCase().equals("y"))
+			{
+				return mazeStore.get(maze).getCrossSectionByY(index);
+			}
+			else if (coordinate.toLowerCase().equals("z"))
+			{
+				return mazeStore.get(maze).getCrossSectionByZ(index);
+			}
+		}
+		setChanged();
+		notifyObservers("Unable to complete operation.");
+		return null;
+	}
+
+	/**
+	 * Saves a maze to a file.
+	 * <p>
+	 * The operation saves as existing maze from mazeStore to the file system, in a given path or filename.
+	 * <br>
+	 * Notifies the presenter if a maze doesn't exist, or when the operation is complete.
+	 */
+	@Override
+	public void saveMaze(String name, String filename) {
+		//Check that the maze exist in the store
+		if (!mazeStore.containsKey(name))
+		{
+			setChanged();
+			notifyObservers("Maze does not exist.");
+		}
+		//Save the maze in file
+		else
+		{
+			try{
+				OutputStream out = new MyCompressorOutputStream(new FileOutputStream(filename));
+				out.write(mazeStore.get(name).toByteArray());
+				out.flush();
+				out.close();
+				setChanged();
+				notifyObservers("Maze " + name + " saved.");
+			}catch(Exception e){
+				setChanged();
+				notifyObservers("Maze could not be saved.");}
+		}
+	}
+	
+	/**
+	 * Loads a maze from a file to the memory.
+	 * <p>
+	 * A maze saved on the file system in loaded and saved in mazeStore.
+	 */
 	@Override
 	public void loadMaze(String filename, String name) {
 		//check if the file does not exist
@@ -187,6 +185,35 @@ public class Maze3dModel extends Observable implements Model {
 		}
 	}
 
+	/**
+	 * Calculates a maze size.
+	 * <p>
+	 * Calculation of a Maze3d object in the memory.
+	 * <br>
+	 * Notifies the presenter with the size in bytes.
+	 */
+	@Override
+	public void mazeSize(String name) {
+		//Check that the maze exist
+		if (!mazeStore.containsKey(name))
+		{
+			setChanged();
+			notifyObservers("The maze does not exist.");
+		}
+		//calculate the size of maze
+		else
+		{
+			int size = mazeStore.get(name).toByteArray().length * 4;
+			setChanged();
+			notifyObservers("\"" + name + "\" maze size: " + size + " bytes.");
+		}
+	}
+
+	/**
+	 * Return the size of a file in the file system.
+	 * <br>
+	 * Notifies the presenter with the size of the file.
+	 */
 	@Override
 	public void fileSize(String filename) {
 		//check if the file does not exist
@@ -204,6 +231,17 @@ public class Maze3dModel extends Observable implements Model {
 		}
 	}
 	
+	/**
+	 * Solving a Maze3d challenge.
+	 * <p>
+	 * The operation receives a name of a Maze3d saved in mazeStore along with an algorithm to solve it.<br>
+	 * Possible input for algorithm:<br>
+	 * - <b>BFS</b> for BFS algorithm.<br>
+	 * - <b>Manhattan</b> for A* algorithm using Manhattan heuristic method.<br>
+	 * - <b>Air</b> for A* algorithm using Air Distance heuristic method.
+	 * <p>
+	 * The solution is saved in solutionStore - a map for a Maze3d name and a Solution for it.
+	 */
 	@Override
 	public void solve(String maze, String algorithm) {
 		if (mazeStore.containsKey(maze))
@@ -236,15 +274,20 @@ public class Maze3dModel extends Observable implements Model {
 		}
 	}
 	
+	/**
+	 * Retrieves a solution from solutionStore.
+	 * <p>
+	 * @return ArrayList<String> containing coordinates for each step in the solution. 
+	 */
 	@Override
 	public ArrayList<String> displaySolution(String maze) {
 		if (solutionsStore.containsKey(maze))
 		{
 			ArrayList<State> solutionStates = solutionsStore.get(maze).getSolution();
 			ArrayList<String> solutionStrings = new ArrayList<String>();
-			for (State state : solutionStates)
+			for (int i = solutionStates.size() - 1; i >= 0; i--)
 			{
-				solutionStrings.add(state.getState());
+				solutionStrings.add(solutionStates.get(i).getState());
 			}
 			return solutionStrings;
 		}
@@ -253,10 +296,13 @@ public class Maze3dModel extends Observable implements Model {
 		return null;
 	}
 
+	/**
+	 * Exits the program.
+	 */
 	@Override
 	public void exit() {
-		Runtime.getRuntime().exit(0);
 		setChanged();
-		notifyObservers("End of Session");
+		notifyObservers("Bye bye!");
+		Runtime.getRuntime().exit(0);
 	}
 }

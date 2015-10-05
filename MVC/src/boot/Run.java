@@ -11,6 +11,9 @@ import presenter.Presenter;
 import view.CLI;
 import view.CLIObservableView;
 
+/**
+ * Main program to run a CLI to perform operations by the user on an MVP archtecture.
+ */
 public class Run {
 	public static void main(String[] args) throws InterruptedException {
 		CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));

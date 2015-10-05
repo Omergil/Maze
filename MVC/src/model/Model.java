@@ -2,8 +2,13 @@ package model;
 
 import java.util.ArrayList;
 
+/**
+ * Interface for Model layer in MVP architecture.
+ * <p>
+ * Contains all methods to be implemented.
+ *
+ */
 public interface Model {
-	int[][][] getData();
 	String[] dir (String path); //daniel
 	void generate(String name, int width, int height, int floors);
 	int[][][] display(String name);

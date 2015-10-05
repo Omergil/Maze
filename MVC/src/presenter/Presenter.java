@@ -16,13 +16,20 @@ public class Presenter implements Observer {
 	ArrayList<String> arguments;
 	HashMap<String, Command> hashMap = new HashMap<String, Command>();
 
+	/**
+	 * Constructor for presenter layer in MVP.
+	 * @param model
+	 * @param ui
+	 */
 	public Presenter(Model model, View ui) {
 		this.model = model;
 		this.ui = ui;
 		setHashMap();
 	}
 	
-	//OMER //Daniel
+	/**
+	 * HashMap for all available commands in the program.
+	 */
 	private void setHashMap() {
 		hashMap.put("generate", new Generate());
 		hashMap.put("help", new Help());
@@ -36,7 +43,12 @@ public class Presenter implements Observer {
 		hashMap.put("exit", new Exit());
 	}
 
-	//OMER
+	/**
+	 * Method used when an observable notifies the observer (the presenter).
+	 * <p>
+	 * If the notifier is the view layer - perform an operation using the model layer.<br>
+	 * If the notifier is the model layer - display the results for the client in the view layer.
+	 */
 	@Override
 	public void update(Observable observable, Object arg1) {
 		if (observable == ui)
@@ -62,6 +74,12 @@ public class Presenter implements Observer {
 		}
 	}
 	
+	/**
+	 * Split arguments for a command given by the client.<br>
+	 * The arguments are returned in array list of Strings.
+	 * @param userInput
+	 * @return ArrayList<String> containing the command arguments.
+	 */
 	private ArrayList<String> splitArguments(String userInput)
 	{
 		ArrayList<String> arguments = new ArrayList<String>();
@@ -69,12 +87,19 @@ public class Presenter implements Observer {
 		return arguments;
 	}
 	
+	/**
+	 * Operation used for failing operations, used to display an error message to the client.
+	 */
 	private void wrongInput()
 	{
 		ui.displayData("Sorry, wrong command.");
 	}
 	
-	//OMER
+	/**
+	 * Checks if a String is numeric.
+	 * @param string
+	 * @return True if a String is numeric.
+	 */
 	private boolean isNumeric(String string)  
 	{  
 	  try  
@@ -89,7 +114,9 @@ public class Presenter implements Observer {
 	  return true;  
 	}
 	
-	//OMER //Daniel
+	/**
+	 * Display all possible commands and their syntax.
+	 */
 	private class Help implements Command
 	{
 		@Override
@@ -109,7 +136,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
-	//OMER
+	/**
+	 * Runs the generate operation in the model layer.
+	 */
 	private class Generate implements Command
 	{
 		@Override
@@ -127,7 +156,11 @@ public class Presenter implements Observer {
 		}		
 	}
 	
-	//OMER
+	/**
+	 * Display a requested element using the model layer.
+	 * <p>
+	 * Can present a maze, a solution, and a cross section.
+	 */
 	private class Display implements Command
 	{
 		@Override
@@ -150,7 +183,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
-	//Daniel
+	/**
+	 * Runs the Save Maze operation in the model layer.
+	 */
 	private class SaveMaze implements Command
 	{
 		@Override
@@ -166,14 +201,16 @@ public class Presenter implements Observer {
 		}
 	}
 	
-	//Daniel
+	/**
+	 * Runs the dir operation in the model layer.
+	 */
 	private class Dir implements Command
 	{
 		@Override
 		public void doCommand() {
 			if (arguments.size() == 2)
 			{
-				ui.displayFiles(model.dir(arguments.get(1)));
+				ui.displayData(model.dir(arguments.get(1)));
 			}
 			else
 			{
@@ -182,7 +219,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
-	//Daniel
+	/**
+	 * Runs the Maze Size operation in the model layer.
+	 */
 	private class MazeSize implements Command
 	{
 		@Override
@@ -194,6 +233,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
+	/**
+	 * Runs the Load Maze operation in the model layer.
+	 */
 	public class LoadMaze implements Command
 	{
 		@Override
@@ -205,6 +247,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
+	/**
+	 * Runs the File Size operation in the model layer.
+	 */
 	public class FileSize implements Command{
 		@Override
 		public void doCommand() {
@@ -215,6 +260,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
+	/**
+	 * Runs the Solve operation in the model layer.
+	 */
 	public class Solve implements Command
 	{
 		@Override
@@ -231,6 +279,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
+	/**
+	 * Runs the Exit operation in the model layer.
+	 */
 	public class Exit implements Command{
 
 		@Override
@@ -241,6 +292,4 @@ public class Presenter implements Observer {
 				wrongInput();
 		}
 	}
-	
-	
 }

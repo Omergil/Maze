@@ -1,38 +1,57 @@
 package view;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import presenter.Command;
 
+/**
+ * Generic CLI.
+ * <p>
+ * Generic Command Line Interface to be used by a client to insert input to the program,
+ * and use the input by the View layer.<br>
+ * The CLI can use different types of InputStreamReader and OutputStreamWriter.
+ */
 public class CLI extends Thread{
 	BufferedReader in;
 	PrintWriter out;
 	View view;
 	String line;
 	
+	/**
+	 * Setter for the View interface.
+	 * @param view
+	 */
 	public void setView(View view) {
 		this.view = view;
 	}
 
+	/**
+	 * Getter for the user input (line).
+	 * @return
+	 */
 	public String getLine() {
 		return line;
 	}
 
-	//Default Constructor
+	/**
+	 * Constructor for the CLI.
+	 * @param in
+	 * @param out
+	 */
 	public CLI(InputStream in, OutputStream out){
 		this.in = new BufferedReader(new InputStreamReader(in));
 		this.out = new PrintWriter(new OutputStreamWriter(out));
 	}
 
-	// Get input from user until 'exit!'
+	/**
+	 * I/O operation of the CLI.
+	 * <p>
+	 * Receives input from the user until the string 'exit' is received.<br>
+	 * The operation runs in a new thread.
+	 */
 	private void runCLIInThread()
 	{
 		new Thread(new Runnable() {
@@ -49,6 +68,9 @@ public class CLI extends Thread{
 		}).start();
 	}
 	
+	/**
+	 * Runs the thread for the CLI.
+	 */
 	public void run() {
 		runCLIInThread();
 	}
