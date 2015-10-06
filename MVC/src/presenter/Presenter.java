@@ -154,7 +154,7 @@ public class Presenter implements Observer {
 			}
 		}		
 	}
-	
+
 	/**
 	 * Display a requested element using the model layer.
 	 * <p>

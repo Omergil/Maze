@@ -91,8 +91,8 @@ public class Maze3dModel extends Observable implements Model {
 	 * @return The maze itself represented by int[][][].
 	 */
 	@Override
-	public int[][][] display(String name) {
-		return mazeStore.get(name).getMaze3d();
+	public Maze3d display(String name) {
+		return mazeStore.get(name);
 	}
 	
 	/**

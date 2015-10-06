@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_51" class="java.beans.XMLDecoder">
+ <int>20</int>
+ <string>Manhattan</string>
+ <string>My_Maze</string>
+ <int>10</int>
+ <int>8</int>
+ <int>3</int>
+</java>

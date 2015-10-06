@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import algorithms.mazeGenerators.Maze3d;
+
 /**
  * View layer of MVP architecture.
  * <p>
@@ -66,16 +68,16 @@ public class CLIObservableView extends Observable implements View {
 		{
 			System.out.println(data);			
 		}
-		else if (data instanceof int[][][])
+		else if (data instanceof Maze3d)
 		{
-			int[][][] maze = (int[][][]) data;
-			for (int floors = 0; floors < maze[0][0].length; floors++)
+			Maze3d maze = (Maze3d) data;
+			for (int floors = 0; floors < maze.getMaze3d()[0][0].length; floors++)
 			{
-				for (int height = maze.length - 1; height >= 0; height--)
+				for (int height = maze.getMaze3d().length - 1; height >= 0; height--)
 				{
-					for (int width = 0; width < maze[0].length; width++)
+					for (int width = 0; width < maze.getMaze3d()[0].length; width++)
 					{
-						System.out.print(" " + maze[height][width][floors] + " ");
+						System.out.print(" " + maze.getMaze3d()[height][width][floors] + " ");
 					}
 					System.out.println();
 				}

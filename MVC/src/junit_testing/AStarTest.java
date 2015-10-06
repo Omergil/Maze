@@ -16,5 +16,4 @@ public class AStarTest {
 		Solution solution = astar.search(new Maze3dSearchable(new MyMaze3dGenerator(3, 3, 3).generate()), new MazeManhattanDistance());
 		assertNotNull(solution);
 	}
-
 }
