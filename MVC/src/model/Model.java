@@ -22,5 +22,7 @@ public interface Model {
 	void solve (String maze, String algorithm);
 	ArrayList<String> displaySolution (String maze);
 	void exit();
+	void saveMap();
+	void loadMap();
 
 }
