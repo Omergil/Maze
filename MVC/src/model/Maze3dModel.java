@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -24,7 +21,6 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
-
 import algorithms.demo.Maze3dSearchable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
@@ -92,13 +88,13 @@ public class Maze3dModel extends Observable implements Model {
 				//check if the maze is already exist
 				if (mazeStore.containsKey(name))
 				{
-					return "maze already exist";
+					return "Maze already exist.";
 				}
 				//check that maze size is valid
 				else if ((width >= 2) && (height >= 2) && (floors >= 2))
 				{
 					mazeStore.put(name, new MyMaze3dGenerator(width, height, floors).generate());
-					return "maze " + name + " is ready";
+					return "Maze " + name + " is ready.";
 				}
 				else
 				{
@@ -119,12 +115,12 @@ public class Maze3dModel extends Observable implements Model {
 					else
 					{
 						setChanged();
-						notifyObservers("Could not create maze");
+						notifyObservers("Could not create maze.");
 					}
 						
 				}catch(Exception e){
 					setChanged();
-					notifyObservers("Could not generate maze");
+					notifyObservers("Could not generate maze.");
 				}
 			}
 		});		
@@ -133,7 +129,7 @@ public class Maze3dModel extends Observable implements Model {
 
 	/**
 	 * Displays the maze to the view layer.
-	 * @return The maze itself represented by int[][][].
+	 * @return Maze3d.
 	 */
 	@Override
 	public Maze3d display(String name) {
@@ -319,9 +315,9 @@ public class Maze3dModel extends Observable implements Model {
 					}
 				}
 				else
+				{
 					return "maze doesnt exist";
-				
-				
+				}
 				return "Could not solve maze";
 			}
 		});
