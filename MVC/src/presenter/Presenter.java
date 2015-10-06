@@ -41,6 +41,8 @@ public class Presenter implements Observer {
 		hashMap.put("file", new FileSize());
 		hashMap.put("solve", new Solve());
 		hashMap.put("exit", new Exit());
+		hashMap.put("savemap", new SaveMap());
+		hashMap.put("loadmap", new LoadMap());
 	}
 
 	/**
@@ -292,4 +294,30 @@ public class Presenter implements Observer {
 				wrongInput();
 		}
 	}
+	
+	
+	/////////////////////ONLY FOR CHECK//////////////////////////////
+	
+	public class SaveMap implements Command{
+
+		@Override
+		public void doCommand() {
+			model.saveMap();
+			
+		}
+	}
+	
+	public class LoadMap implements Command{
+
+		@Override
+		public void doCommand() {
+			model.loadMap();
+		}
+	}
+	
+	///////end of check///////////////////////////////////////////////
+	
+	
+	
+	
 }

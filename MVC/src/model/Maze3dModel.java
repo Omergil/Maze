@@ -1,13 +1,30 @@
 package model;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.InflaterInputStream;
+
 import algorithms.demo.Maze3dSearchable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
@@ -27,7 +44,9 @@ public class Maze3dModel extends Observable implements Model {
 
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
+	ExecutorService exec = Executors.newFixedThreadPool(2);
 
+	
 
 	/**
 	 * Returns all files and folders for a given path on the file system.
@@ -67,23 +86,49 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public void generate(String name, int width, int height, int floors) {
-		if ((width >= 2) && (height >= 2) && (floors >= 2))
-		{
-			new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					mazeStore.put(name, new MyMaze3dGenerator(width, height, floors).generate());
-					setChanged();
-					notifyObservers("maze " + name + " is ready");	
+		Future<String> f = exec.submit(new Callable<String>(){
+			@Override
+			public String call() throws Exception {
+				//check if the maze is already exist
+				if (mazeStore.containsKey(name))
+				{
+					return "maze already exist";
 				}
-			}).start();		
-		}
-		else
-		{
-			setChanged();
-			notifyObservers("Invalid maze size.");
-		}
+				//check that maze size is valid
+				else if ((width >= 2) && (height >= 2) && (floors >= 2))
+				{
+					mazeStore.put(name, new MyMaze3dGenerator(width, height, floors).generate());
+					return "maze " + name + " is ready";
+				}
+				else
+				{
+					return "Invalid maze size.";
+				}
+			}});
+		
+		exec.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				try{
+					String string = f.get();
+					if (!string.isEmpty()){
+						setChanged();
+						notifyObservers(string);
+					}
+					else
+					{
+						setChanged();
+						notifyObservers("Could not create maze");
+					}
+						
+				}catch(Exception e){
+					setChanged();
+					notifyObservers("Could not generate maze");
+				}
+			}
+		});		
+			
 	}
 
 	/**
@@ -244,35 +289,65 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public void solve(String maze, String algorithm) {
-		if (mazeStore.containsKey(maze))
-		{
-			new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
+		Future<String> f = exec.submit(new Callable<String>(){
+
+			@Override
+			public String call() throws Exception {
+				//Check if the solution already exist
+				if (solutionsStore.containsKey(maze))
+				{
+					return "solution already exist";
+				}
+				//check that maze is in the store
+				if (mazeStore.containsKey(maze))
+				{
+					//solve maze by chosen solution
 					if (algorithm.toLowerCase().equals("bfs"))
 					{
 						solutionsStore.put(maze, new BFS().search(new Maze3dSearchable(mazeStore.get(maze))));
+						return "Solution for " + maze + " is ready.";
 					}
 					else if (algorithm.toLowerCase().equals("manhattan"))
 					{
 						solutionsStore.put(maze, new AStar().search(new Maze3dSearchable(mazeStore.get(maze)), new MazeManhattanDistance()));
+						return "Solution for " + maze + " is ready.";
 					}
 					else if (algorithm.toLowerCase().equals("air"))
 					{
 						solutionsStore.put(maze, new AStar().search(new Maze3dSearchable(mazeStore.get(maze)), new MazeAirDistance()));
+						return "Solution for " + maze + " is ready.";
 					}
-					setChanged();
-					notifyObservers("Solution for " + maze + " is ready.");
 				}
-			}).start();
-		}
-		else
-		{
-			setChanged();
-			notifyObservers("Maze does not exist.");
-		}
+				else
+					return "maze doesnt exist";
+				
+				
+				return "Could not solve maze";
+			}
+		});
+			exec.execute(new Runnable() {
+				
+				@Override
+				public void run() {
+					try{
+						String string = f.get();
+						if(!string.isEmpty())
+						{
+							setChanged();
+							notifyObservers(string);
+						}
+						else
+						{
+							setChanged();
+							notifyObservers("Could not solve maze");	
+						}
+					}catch(Exception e){
+						setChanged();
+						notifyObservers("Could not solve maze");
+					}
+			}});
 	}
+	
 	
 	/**
 	 * Retrieves a solution from solutionStore.
@@ -303,6 +378,75 @@ public class Maze3dModel extends Observable implements Model {
 	public void exit() {
 		setChanged();
 		notifyObservers("Bye bye!");
-		Runtime.getRuntime().exit(0);
+		exec.shutdown();
 	}
+	
+	
+	/**
+	 * Compress object to bytes
+	 * @return compressed object
+	 */
+	public static byte[] toCompressedBytes(Object o) throws IOException
+	{
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		ObjectOutputStream os = new ObjectOutputStream(new DeflaterOutputStream(b));
+		os.writeObject(o);
+		os.close();
+		return b.toByteArray();
+	}
+	
+	/**
+	 * Decompress object
+	 * @return uncompressed object
+	 */
+	public static Object deCompressedBytes(byte[] bytes) throws IOException, ClassNotFoundException
+	{
+		ObjectInputStream os = new ObjectInputStream(new InflaterInputStream(new ByteArrayInputStream(bytes)));
+		return os.readObject();
+	}
+	
+	/** 
+	 * Save the map in zip file
+	 * @throws IOException 
+	 * 
+	 */
+	@Override
+	public void saveMap()
+	{
+		String path = "c:/zipfile.zip";
+		ObjectOutputStream os = null;
+		try {
+			os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream(path)));
+			os.writeObject(toCompressedBytes(solutionsStore));
+			os.flush();
+			os.close();
+		} catch (IOException e) {
+			setChanged();
+			notifyObservers("Cannot save map");
+		}
+	}
+	
+	/** 
+	 * Open the map from zip file
+	 * @throws IOException 
+	 * 
+	 */
+	@Override
+	public void loadMap()
+	{
+		String path = "c:/zipfile.zip";
+		ObjectInputStream is = null;
+		try {
+			is = new ObjectInputStream(new GZIPInputStream(new FileInputStream(path)));
+			byte b[] = new byte[toCompressedBytes(solutionsStore).length];
+			is.read(b);
+			is.close();
+		} catch (IOException e) {
+			setChanged();
+			notifyObservers("Cannot load map");
+		}
+	}
+	
+	
+	
 }
