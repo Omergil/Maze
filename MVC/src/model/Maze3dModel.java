@@ -42,8 +42,6 @@ public class Maze3dModel extends Observable implements Model {
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ExecutorService exec = Executors.newFixedThreadPool(2);
 
-	
-
 	/**
 	 * Returns all files and folders for a given path on the file system.
 	 * @return Array of Strings.
