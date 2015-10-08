@@ -1,12 +1,9 @@
 package view;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import algorithms.mazeGenerators.Position;
 
@@ -17,33 +14,22 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	final Color character = new Color(null, 237, 28, 36);
 	final Color background = new Color(null, 191, 191, 191);
 	
-	GUIMazeDisplayer3d(Composite parent, int style) {
+	GUIMazeDisplayer3d(Composite parent, int style)
+	{
 		super(parent, style);
 		setBackground(background);
 		
-		//DELETE???
-		parent.addListener(SWT.Activate, new Listener() {
-			public void handleEvent(Event e) {
-				if (isMazeChanged)
-				{
-					setMazeChanged(false);
-					System.out.println("?????????");
-				}
-			}
-		});
-		
-		addPaintListener(new PaintListener() {
-			
+		addPaintListener(new PaintListener()
+		{
 			@Override
-			public void paintControl(PaintEvent e) {
+			public void paintControl(PaintEvent e)
+			{
 				e.gc.setForeground(new Color(null, 0,0,0));
 				e.gc.setBackground(new Color(null, 0,0,0));
 				
 				paintMaze(e, characterPosition.getZ() + 1, 0);
 				paintMaze(e, characterPosition.getZ(), (getSize().y/4)+(getSize().y/8));
 				paintMaze(e, characterPosition.getZ() - 1, (getSize().y/4)*3);
-				maze.printMaze();
-				System.out.println("Start: x: " + maze.getStartPosition().getX() + " y: " + maze.getStartPosition().getY() + " z: " + maze.getStartPosition().getZ() );
 			}
 		});
 	}

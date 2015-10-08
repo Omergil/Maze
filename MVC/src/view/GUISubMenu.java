@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public abstract class GUISubMenu extends Dialog {
 
-	protected HashMap<String, String> input = new HashMap<String,String>();
+	protected HashMap<String, String> input = null;
 	
 	/**
 	 * Constructor to use with predefined style.

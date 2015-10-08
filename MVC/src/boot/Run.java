@@ -24,7 +24,7 @@ public class Run {
 		model.addObserver(presenter);
 		ui.getCli().run();*/
 		
-		GUIMainWindow gui = new GUIMainWindow(800, 400);
+		GUIMainWindow gui = new GUIMainWindow(450, 400);
 		Maze3dModel model = new Maze3dModel();
 		Presenter presenter = new Presenter(model, gui);
 		gui.addObserver(presenter);

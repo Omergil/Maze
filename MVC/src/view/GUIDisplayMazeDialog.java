@@ -1,5 +1,7 @@
 package view;
 
+import java.util.HashMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,7 +46,7 @@ public class GUIDisplayMazeDialog extends GUISubMenu {
 
 		// Display the message label
 		Label messageLabel = new Label(shell, SWT.NONE);
-	    messageLabel.setText("Please insert the maze name:");
+	    messageLabel.setText("Please insert the maze name.");
 	    messageLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
 	    // Display maze name label
@@ -69,9 +71,11 @@ public class GUIDisplayMazeDialog extends GUISubMenu {
 	    ok.setText("OK");
 	    ok.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
 	    ok.addSelectionListener(new SelectionAdapter() {
-	      public void widgetSelected(SelectionEvent event) {
-	        input.put("mazeName", mazeNameText.getText());
-	        shell.close();
+	      public void widgetSelected(SelectionEvent event)
+	      {
+	    	  input = new HashMap<String,String>();
+	    	  input.put("mazeName", mazeNameText.getText());
+	    	  shell.close();
 	      }
 	    });
 

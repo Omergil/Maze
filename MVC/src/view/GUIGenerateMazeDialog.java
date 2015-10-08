@@ -70,7 +70,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 
 		// Display the message label
 		Label messageLabel = new Label(shell, SWT.NONE);
-	    messageLabel.setText("Please set the maze properties:");
+	    messageLabel.setText("Please set the maze properties.");
 	    messageLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
 	    // Display maze name label
@@ -145,13 +145,16 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    Button ok = new Button(shell, SWT.PUSH);
 	    ok.setText("OK");
 	    ok.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
-	    ok.addSelectionListener(new SelectionAdapter() {
-	      public void widgetSelected(SelectionEvent event) {
-	        input.put("mazeName", mazeNameText.getText());
-	        input.put("x", xText.getText());
-	        input.put("y", xText.getText());
-	        input.put("floors", xText.getText());
-	        shell.close();
+	    ok.addSelectionListener(new SelectionAdapter()
+	    {
+	      public void widgetSelected(SelectionEvent event)
+	      {
+	    	  input = new HashMap<String,String>();
+	    	  input.put("mazeName", mazeNameText.getText());
+	    	  input.put("x", xText.getText());
+	    	  input.put("y", xText.getText());
+	    	  input.put("floors", xText.getText());
+	    	  shell.close();
 	      }
 	    });
 

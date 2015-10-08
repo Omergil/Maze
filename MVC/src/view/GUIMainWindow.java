@@ -16,6 +16,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 
 	String userInput;
 	GUIMazeDisplayer3d maze3dDisplay;
+	HashMap<String, String> inputHashMap;
 	
 	public GUIMainWindow(int width, int height) {
 		super(width, height);
@@ -34,7 +35,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				GUIGenerateMazeDialog generateMazeDialog = new GUIGenerateMazeDialog(shell);
-				HashMap<String, String> inputHashMap = generateMazeDialog.open();
+				inputHashMap = generateMazeDialog.open();
 				if (!(inputHashMap == null))
 				{
 					setUserInput("generate 3d maze " + inputHashMap.get("mazeName") + " " + inputHashMap.get("x") +
@@ -60,7 +61,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				GUIDisplayMazeDialog displayMazeDialog = new GUIDisplayMazeDialog(shell);
-				HashMap<String, String> inputHashMap = displayMazeDialog.open();
+				inputHashMap = displayMazeDialog.open();
 				if (!(inputHashMap == null))
 				{
 					setUserInput("display " + inputHashMap.get("mazeName"));
@@ -75,10 +76,43 @@ public class GUIMainWindow extends BasicWindow implements View {
 		Button saveMaze = new Button(shell, SWT.PUSH);
 		saveMaze.setText("Save Maze");
 		saveMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		saveMaze.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				GUISaveMazeDialog saveMazeDialog = new GUISaveMazeDialog(shell);
+				inputHashMap = saveMazeDialog.open();
+				if (!(inputHashMap == null))
+				{
+					setUserInput("save maze " + inputHashMap.get("mazeName") + " " + inputHashMap.get("filePath"));
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				
+			}
+		});
 
 		Button loadMaze = new Button(shell, SWT.PUSH);
 		loadMaze.setText("Load Maze");
 		loadMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		loadMaze.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				GUILoadMazeDialog loadMazeDialog = new GUILoadMazeDialog(shell);
+				inputHashMap = loadMazeDialog.open();
+				if (!(inputHashMap == null))
+				{
+					setUserInput("load maze " + inputHashMap.get("filePath") + " " + inputHashMap.get("mazeName"));
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
 
 		Button mazeSize = new Button(shell, SWT.PUSH);
 		mazeSize.setText("Maze Size");
@@ -104,8 +138,16 @@ public class GUIMainWindow extends BasicWindow implements View {
 		{
 			Maze3d maze = (Maze3d) data;
 			maze3dDisplay.setMaze(maze);
-			//lmaze3dDisplay.paint
-			//maze3dDisplay.setMazeChanged(true);
+			maze3dDisplay.redraw();
+		}
+		else if (data instanceof String)
+		{
+			String message = (String) data;
+			display.syncExec(new Runnable() {
+				public void run() {
+					new GUIMessageBox(shell, message);
+				}
+			});
 		}
 	}
 

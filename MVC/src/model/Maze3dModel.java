@@ -131,7 +131,13 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public Maze3d display(String name) {
-		return mazeStore.get(name);
+		if (mazeStore.containsKey(name))
+		{
+			return mazeStore.get(name);
+		}
+		setChanged();
+		notifyObservers("Maze doesn't exist.");
+		return null;
 	}
 	
 	/**
