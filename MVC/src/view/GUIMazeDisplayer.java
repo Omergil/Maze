@@ -10,6 +10,7 @@ public abstract class GUIMazeDisplayer extends Canvas {
 
 	Maze3d maze;
 	Position characterPosition;
+	boolean isMazeChanged = false;
 	
 	GUIMazeDisplayer(Composite parent, int style) {
 		super(parent, style);
@@ -21,6 +22,14 @@ public abstract class GUIMazeDisplayer extends Canvas {
 		setCharacterPosition(this.maze.getStartPosition());
 	}
 	
+	public boolean isMazeChanged() {
+		return isMazeChanged;
+	}
+
+	public void setMazeChanged(boolean isMazeChanged) {
+		this.isMazeChanged = isMazeChanged;
+	}
+
 	public abstract void setCharacterPosition(Position position);
 	public abstract void moveLeft();
 	public abstract void moveRight();

@@ -1,16 +1,12 @@
 package view;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -18,37 +14,34 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class GUIGenerateMazeWindow extends Dialog {
-
-	private HashMap<String, String> input = new HashMap<String,String>();
+public class GUIGenerateMazeDialog extends GUISubMenu {
 
 	/**
-	* InputDialog constructor
-	* 
-	* @param parent the parent
-	*/
-	public GUIGenerateMazeWindow(Shell parent)
+	 * Constructor to use with predefined style.
+	 * @param parent
+	 */
+	public GUIGenerateMazeDialog(Shell parent)
 	{
 	// Pass the default styles here
 	this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 	}
 
 	/**
-	* InputDialog constructor
-	* @param parent the parent
-	   * @param style the style
-	   */
-	public GUIGenerateMazeWindow(Shell parent, int style) {
+	 * Constructor to use with manual style definition.
+	 * @param parent
+	 * @param style
+	 */
+	public GUIGenerateMazeDialog(Shell parent, int style) {
 	// Let users override the default styles
 	super(parent, style);
 	setText("Generate maze");
 	}
 
-	  /**
-	   * Opens the dialog and returns the input
-	   * 
-	   * @return String
-	   */
+	/**
+	 * Opens the dialog.
+	 * 
+	 * @return HashMap<String,String> containing the user input.
+	 */
 	public HashMap<String, String> open() {
 	// Create the dialog window
 	Shell shell = new Shell(getParent(), getStyle());
@@ -67,16 +60,16 @@ public class GUIGenerateMazeWindow extends Dialog {
     return input;
 	}
 
-	  /**
-	   * Creates the dialog's contents
-	   * 
-	   * @param shell the dialog window
-	   */
-	  private void createContents(final Shell shell) {
-	    shell.setLayout(new GridLayout(2, true));
+	/**
+	 * Creates the contents of the sub menu.
+	 * @param shell the dialog window
+	 */
+	protected void createContents(final Shell shell)
+	{
+		shell.setLayout(new GridLayout(2, true));
 
-	    // Display maze name label
-	    Label messageLabel = new Label(shell, SWT.NONE);
+		// Display the message label
+		Label messageLabel = new Label(shell, SWT.NONE);
 	    messageLabel.setText("Please set the maze properties:");
 	    messageLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
@@ -87,46 +80,56 @@ public class GUIGenerateMazeWindow extends Dialog {
 	    
 	    // Display the maze name box
 	    final Text mazeNameText = new Text(shell, SWT.BORDER);
-	    mazeNameText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));	    
+	    mazeNameText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));	 
+	    mazeNameText.addListener(SWT.Verify, new Listener()
+	    {
+		    @Override
+			public void handleEvent(Event e)
+		    {
+		    	e = checkSpaces(e);
+			}
+		});
 	    
-	    // Display maze name label
+	    // Display the X label
 	    Label xLabel = new Label(shell, SWT.NONE);
 	    xLabel.setText("X:");
 	    xLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
-	    // Display the maze name box
+	    // Display the X box
 	    final Text xText = new Text(shell, SWT.BORDER);
 	    xText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
-	    xText.addListener(SWT.Verify, new Listener() {
-			
+	    xText.addListener(SWT.Verify, new Listener()
+	    {
 			@Override
-			public void handleEvent(Event e) {
+			public void handleEvent(Event e)
+			{
 				e = checkIfNumeric(e);
 			}
 		});
 	        
-	    // Display maze name label
+	    // Display the Y label
 	    Label yLabel = new Label(shell, SWT.NONE);
 	    yLabel.setText("Y:");
 	    yLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
-	    // Display the maze name box
+	    // Display the Y box
 	    final Text yText = new Text(shell, SWT.BORDER);
 	    yText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
-	    yText.addListener(SWT.Verify, new Listener() {
-			
-			@Override
-			public void handleEvent(Event e) {
+	    yText.addListener(SWT.Verify, new Listener()
+	    {
+	    	@Override
+			public void handleEvent(Event e)
+	    	{
 				e = checkIfNumeric(e);
 			}
 		});
         
-	    // Display maze name label
+	    // Display the floors label
 	    Label floorsLabel = new Label(shell, SWT.NONE);
 	    floorsLabel.setText("Floors:");
 	    floorsLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
-	    // Display the maze name box
+	    // Display the floors box
 	    final Text floorsText = new Text(shell, SWT.BORDER);
 	    floorsText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    floorsText.addListener(SWT.Verify, new Listener() {
@@ -137,9 +140,8 @@ public class GUIGenerateMazeWindow extends Dialog {
 			}
 		});
     
-	    // Create the OK button and add a handler
-	    // so that pressing it will set input
-	    // to the entered value
+	    // Create the OK button and add a handler,
+	    // so that pressing it will set the HashMap with the user's input
 	    Button ok = new Button(shell, SWT.PUSH);
 	    ok.setText("OK");
 	    ok.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
@@ -153,8 +155,8 @@ public class GUIGenerateMazeWindow extends Dialog {
 	      }
 	    });
 
-	    // Create the cancel button and add a handler
-	    // so that pressing it will set input to null
+	    // Create the cancel button and add a handler,
+	    // so that pressing it will set the HashMap to null
 	    Button cancel = new Button(shell, SWT.PUSH);
 	    cancel.setText("Cancel");
 	    cancel.setLayoutData(new GridData(GridData.FILL, SWT.NONE, true, true, 1, 1));
@@ -165,25 +167,7 @@ public class GUIGenerateMazeWindow extends Dialog {
 	      }
 	    });
 
-	    // Set the OK button as the default, so
-	    // user can type input and press Enter
-	    // to dismiss
+	    // Set the OK button as default
 	    shell.setDefaultButton(ok);
-	  }
-	  
-	  private Event checkIfNumeric(Event e)
-	  {
-		  String string = e.text;
-		  char[] chars = new char[string.length()];
-		  string.getChars(0, chars.length, chars, 0);
-		  for (int i = 0; i < chars.length; i++)
-		  {
-			  if (!('0' <= chars[i] && chars[i] <= '9'))
-			  {
-				  e.doit = false;
-				  return e;
-			  }
-		  }
-		  return e;
 	  }
 }

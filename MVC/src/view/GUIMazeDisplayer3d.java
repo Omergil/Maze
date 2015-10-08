@@ -1,10 +1,12 @@
 package view;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import algorithms.mazeGenerators.Position;
 
@@ -18,6 +20,18 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	GUIMazeDisplayer3d(Composite parent, int style) {
 		super(parent, style);
 		setBackground(background);
+		
+		//DELETE???
+		parent.addListener(SWT.Activate, new Listener() {
+			public void handleEvent(Event e) {
+				if (isMazeChanged)
+				{
+					setMazeChanged(false);
+					System.out.println("?????????");
+				}
+			}
+		});
+		
 		addPaintListener(new PaintListener() {
 			
 			@Override
