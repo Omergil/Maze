@@ -24,5 +24,5 @@ public interface Model {
 	void exit();
 	void saveMap();
 	void loadMap();
-
+	
 }

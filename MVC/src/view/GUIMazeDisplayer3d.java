@@ -1,9 +1,13 @@
 package view;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import algorithms.mazeGenerators.Position;
 
@@ -27,8 +31,8 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 				e.gc.setForeground(new Color(null, 0,0,0));
 				e.gc.setBackground(new Color(null, 0,0,0));
 				
-				paintMaze(e, characterPosition.getZ() + 1, 0);
-				paintMaze(e, characterPosition.getZ(), (getSize().y/4)+(getSize().y/8));
+				paintMaze(e, characterPosition.getZ() + 1, getSize().y/12);
+				paintMaze(e, characterPosition.getZ(), (getSize().y/4)+(getSize().y/6));
 				paintMaze(e, characterPosition.getZ() - 1, (getSize().y/4)*3);
 			}
 		});
@@ -48,7 +52,6 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			{
 				for (int j = 0; j < maze.getMaze3d()[0].length;j++)
 				{
-					
 					int x = j*cellWidth;
 					int y = i*cellHeight;
 					e.gc.setBackground(wall);
@@ -78,8 +81,10 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 				}
 			}
 		}
-		e.gc.setBackground(character);
-		e.gc.fillRectangle(cellWidth*characterPosition.getX(), cellHeight*characterPosition.getY()+(getSize().y/4)+(getSize().y/8), cellWidth, cellHeight);
+		
+		// Set character image
+	    Image character = new Image(getShell().getDisplay(), "Pics\\character.png");
+	    e.gc.drawImage(character,0,0,character.getBounds().width,character.getBounds().height,cellWidth*characterPosition.getX(), cellHeight*characterPosition.getY()+(getSize().y/4)+(getSize().y/6), cellWidth, cellHeight);
 	}
 
 	@Override

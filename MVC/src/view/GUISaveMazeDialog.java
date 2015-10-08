@@ -25,8 +25,10 @@ public class GUISaveMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUISaveMazeDialog(Shell parent) {
-		super(parent);
+	public GUISaveMazeDialog(Shell parent)
+	{
+		// Pass the default styles here
+		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 	}
 
 	/**
@@ -34,16 +36,16 @@ public class GUISaveMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUISaveMazeDialog(Shell parent, int style) {
-	// Let users override the default styles
-	super(parent, style);
-	setText("Save maze");
+	public GUISaveMazeDialog(Shell parent, int style)
+	{
+		// Let users override the default styles
+		super(parent, style);
+		setText("Save maze");
 	}
 	
-	
-	
 	@Override
-	protected void createContents(Shell shell) {
+	protected void createContents(Shell shell)
+	{
 		shell.setLayout(new GridLayout(3, true));
 	    
 	    // Display maze name label

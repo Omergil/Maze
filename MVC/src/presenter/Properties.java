@@ -24,6 +24,7 @@ public class Properties implements Serializable {
 	int mazeWidth;
 	int mazeHeight;
 	int mazeFloors;
+	String view;
 	
 	/**
 	 * Check if the properties were successfully set.
@@ -128,6 +129,22 @@ public class Properties implements Serializable {
 	public void setMazeSolvingAlgorithm(String mazeSolvingAlgorithm) {
 		this.mazeSolvingAlgorithm = mazeSolvingAlgorithm;
 	}
+	
+	/**
+	 * Gets the selected view property.
+	 * @return String - selected view.
+	 */
+	public String getView() {
+		return view;
+	}
+
+	/**
+	 * Sets the selected view property.
+	 * @param view
+	 */
+	public void setView(String view) {
+		this.view = view;
+	}
 
 	/**
 	 * Default constructor.
@@ -152,12 +169,14 @@ public class Properties implements Serializable {
 			mazeWidth = 10;
 			mazeHeight = 8;
 			mazeFloors = 3;
+			view = "GUI";
 			e.writeObject(numOfThreads);
 			e.writeObject(mazeSolvingAlgorithm);
 			e.writeObject(mazeName);
 			e.writeObject(mazeWidth);
 			e.writeObject(mazeHeight);
 			e.writeObject(mazeFloors);
+			e.writeObject(view);
 			e.close();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -184,9 +203,9 @@ public class Properties implements Serializable {
 				this.mazeWidth = (int)d.readObject();
 				this.mazeHeight = (int)d.readObject();
 				this.mazeFloors = (int)d.readObject();
+				this.view = (String)d.readObject();
 				propertiesSet = true;				
 			} catch (Exception e) {
-				e.printStackTrace();
 				// Create a new valid Properties.xml files
 				save();
 			}

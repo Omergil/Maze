@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class GUILoadMazeDialog extends GUISubMenu {
+public class GUIFileSizeDialog extends GUISubMenu {
 
 	private static final String[] FILTER_TYPES = {"Maze3d files (*.maz)"};
 	private static final String[] FILTER_SUFFIX = {"*.maz"};
@@ -25,7 +25,7 @@ public class GUILoadMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUILoadMazeDialog(Shell parent)
+	public GUIFileSizeDialog(Shell parent)
 	{
 		// Pass the default styles here
 		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -36,11 +36,11 @@ public class GUILoadMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUILoadMazeDialog(Shell parent, int style)
+	public GUIFileSizeDialog(Shell parent, int style)
 	{
 		// Let users override the default styles
 		super(parent, style);
-		setText("Load maze");
+		setText("File size");
 	}
 	
 	@Override
@@ -74,35 +74,17 @@ public class GUILoadMazeDialog extends GUISubMenu {
 	    	}
 	    });
 	    
-	    // Display maze name label
-	    Label mazeNameLabel = new Label(shell, SWT.NONE);
-	    mazeNameLabel.setText("Maze name:");
-	    mazeNameLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 3, 1));
-	    
-	    // Display the maze name box
-	    final Text mazeNameText = new Text(shell, SWT.BORDER);
-	    mazeNameText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 3, 1));	 
-	    mazeNameText.addListener(SWT.Verify, new Listener()
-	    {
-		    @Override
-			public void handleEvent(Event e)
-		    {
-		    	e = checkSpaces(e);
-			}
-		});
-	    
 	    // Create the OK button and add a handler,
 	    // so that pressing it will set the HashMap with the user's input
-	    Button load = new Button(shell, SWT.PUSH);
-	    load.setText("Load");
-	    load.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
-	    load.addSelectionListener(new SelectionAdapter()
+	    Button ok = new Button(shell, SWT.PUSH);
+	    ok.setText("OK");
+	    ok.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
+	    ok.addSelectionListener(new SelectionAdapter()
 	    {
 	    	public void widgetSelected(SelectionEvent event)
 	    	{
 	    		input = new HashMap<String,String>();
 	    		input.put("filePath", filePathText.getText());
-	    		input.put("mazeName", mazeNameText.getText());
 	    		shell.close();
 	    	}
 	    });
@@ -120,6 +102,6 @@ public class GUILoadMazeDialog extends GUISubMenu {
 	    });
 
 	    // Set the Load button as default
-	    shell.setDefaultButton(load);
+	    shell.setDefaultButton(ok);
 	}
 }

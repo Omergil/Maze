@@ -4,6 +4,7 @@ import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -22,8 +23,8 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	 */
 	public GUIGenerateMazeDialog(Shell parent)
 	{
-	// Pass the default styles here
-	this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		// Pass the default styles here
+		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 	}
 
 	/**
@@ -31,33 +32,11 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUIGenerateMazeDialog(Shell parent, int style) {
-	// Let users override the default styles
-	super(parent, style);
-	setText("Generate maze");
-	}
-
-	/**
-	 * Opens the dialog.
-	 * 
-	 * @return HashMap<String,String> containing the user input.
-	 */
-	public HashMap<String, String> open() {
-	// Create the dialog window
-	Shell shell = new Shell(getParent(), getStyle());
-	shell.setText(getText());
-	createContents(shell);
-	shell.pack();
-	shell.open();
-	Display display = getParent().getDisplay();
-	while (!shell.isDisposed()) {
-	  if (!display.readAndDispatch())
-	  {
-	    display.sleep();
-      }
-    }
-    // Return the entered value, or null
-    return input;
+	public GUIGenerateMazeDialog(Shell parent, int style)
+	{
+		// Let users override the default styles
+		super(parent, style);
+		setText("Generate maze");
 	}
 
 	/**
@@ -152,8 +131,8 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    	  input = new HashMap<String,String>();
 	    	  input.put("mazeName", mazeNameText.getText());
 	    	  input.put("x", xText.getText());
-	    	  input.put("y", xText.getText());
-	    	  input.put("floors", xText.getText());
+	    	  input.put("y", yText.getText());
+	    	  input.put("floors", floorsText.getText());
 	    	  shell.close();
 	      }
 	    });

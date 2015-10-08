@@ -14,14 +14,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class GUIDisplayMazeDialog extends GUISubMenu {
-	
+public class GUIMazeSizeDialog extends GUISubMenu {
+
 	/**
 	 * Constructor to use with manual style definition.
 	 * @param parent
 	 * @param style
 	 */
-	public GUIDisplayMazeDialog(Shell parent)
+	public GUIMazeSizeDialog(Shell parent)
 	{
 		// Pass the default styles here
 		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -32,11 +32,10 @@ public class GUIDisplayMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUIDisplayMazeDialog(Shell parent, int style)
-	{
-		// Let users override the default styles
-		super(parent, style);
-		setText("Display maze");
+	public GUIMazeSizeDialog(Shell parent, int style) {
+	// Let users override the default styles
+	super(parent, style);
+	setText("Maze size");
 	}
 	
 	/**
@@ -46,15 +45,10 @@ public class GUIDisplayMazeDialog extends GUISubMenu {
 	@Override
 	protected void createContents(Shell shell) {
 		shell.setLayout(new GridLayout(2, true));
-
-		// Display the message label
-		Label messageLabel = new Label(shell, SWT.NONE);
-	    messageLabel.setText("Please insert the maze name.");
-	    messageLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
 	    // Display maze name label
 	    Label mazeNameLabel = new Label(shell, SWT.NONE);
-	    mazeNameLabel.setText("Name:");
+	    mazeNameLabel.setText("Maze name:");
 	    mazeNameLabel.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    
 	    // Display the maze name box
@@ -94,6 +88,6 @@ public class GUIDisplayMazeDialog extends GUISubMenu {
 	    });
 
 	    // Set the OK button as default
-	    shell.setDefaultButton(ok);	  
-	}
+	    shell.setDefaultButton(ok);	 
+		}
 }

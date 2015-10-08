@@ -61,7 +61,7 @@ public class Maze3dModel extends Observable implements Model {
 			else
 			{
 				setChanged();
-				notifyObservers("Path does not exist.");
+				notifyObservers("Path doesn't exist.");
 				return null;
 			} 
 		}catch(Exception e){
@@ -182,7 +182,7 @@ public class Maze3dModel extends Observable implements Model {
 		if (!mazeStore.containsKey(name))
 		{
 			setChanged();
-			notifyObservers("Maze does not exist.");
+			notifyObservers("Maze doesn't exist.");
 		}
 		//Save the maze in file
 		else
@@ -210,7 +210,7 @@ public class Maze3dModel extends Observable implements Model {
 		//check if the file does not exist
 		if (!new File(filename).exists()){
 			setChanged();
-			notifyObservers("The file does not exist");
+			notifyObservers("The file doesn't exist");
 		}
 		//load maze from file and save in store
 		else
@@ -243,7 +243,7 @@ public class Maze3dModel extends Observable implements Model {
 		if (!mazeStore.containsKey(name))
 		{
 			setChanged();
-			notifyObservers("The maze does not exist.");
+			notifyObservers("The maze doesn't exist.");
 		}
 		//calculate the size of maze
 		else
@@ -264,7 +264,7 @@ public class Maze3dModel extends Observable implements Model {
 		//check if the file does not exist
 		if (!new File(filename).exists()){
 			setChanged();
-			notifyObservers("The file does not exist");
+			notifyObservers("The file doesn't exist");
 		}
 		//check the maze size in the file
 		else
@@ -296,7 +296,7 @@ public class Maze3dModel extends Observable implements Model {
 				//Check if the solution already exist
 				if (solutionsStore.containsKey(maze))
 				{
-					return "solution already exist";
+					return "Solution already exists.";
 				}
 				//check that maze is in the store
 				if (mazeStore.containsKey(maze))
@@ -320,9 +320,9 @@ public class Maze3dModel extends Observable implements Model {
 				}
 				else
 				{
-					return "maze doesnt exist";
+					return "Maze doesn't exist.";
 				}
-				return "Could not solve maze";
+				return "Could not solve maze.";
 			}
 		});
 			exec.execute(new Runnable() {
@@ -339,11 +339,11 @@ public class Maze3dModel extends Observable implements Model {
 						else
 						{
 							setChanged();
-							notifyObservers("Could not solve maze");	
+							notifyObservers("Could not solve maze.");	
 						}
 					}catch(Exception e){
 						setChanged();
-						notifyObservers("Could not solve maze");
+						notifyObservers("Could not solve maze.");
 					}
 			}});
 	}
@@ -422,7 +422,7 @@ public class Maze3dModel extends Observable implements Model {
 			os.close();
 		} catch (IOException e) {
 			setChanged();
-			notifyObservers("Cannot save map");
+			notifyObservers("Cannot save map.");
 		}
 	}
 	
@@ -443,7 +443,7 @@ public class Maze3dModel extends Observable implements Model {
 			is.close();
 		} catch (IOException e) {
 			setChanged();
-			notifyObservers("Cannot load map");
+			notifyObservers("Cannot load map.");
 		}
 	}
 	

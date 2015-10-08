@@ -36,7 +36,7 @@ public abstract class GUISubMenu extends Dialog {
 	public HashMap<String, String> open() {
 	// Create the dialog window
 	Shell shell = new Shell(getParent(), getStyle());
-	//shell.setText(getText());
+	shell.setText(getText());
 	createContents(shell);
 	shell.pack();
 	shell.open();
