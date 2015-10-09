@@ -203,7 +203,6 @@ public class GUIMainWindow extends BasicWindow implements View {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//COMPLETE
 				if (maze3dDisplay.getMazeName() != null)
 				{
 					maze3dDisplay.setDisplayedHint(true);
@@ -338,7 +337,6 @@ public class GUIMainWindow extends BasicWindow implements View {
 		else if (data instanceof List)
 		{
 			ArrayList<String> solution = (ArrayList<String>) data;
-			//maze3dDisplay.setDisplayedSolution(true);
 			maze3dDisplay.displaySolution(solution);
 		}
 	}

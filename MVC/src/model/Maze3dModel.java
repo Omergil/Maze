@@ -390,7 +390,7 @@ public class Maze3dModel extends Observable implements Model {
 			return solutionStrings;
 		}
 		setChanged();
-		notifyObservers("Unable to complete operation.");
+		notifyObservers("Please perform the \"Solve Maze\" operation berfore using this feature.");
 		return null;
 	}
 
