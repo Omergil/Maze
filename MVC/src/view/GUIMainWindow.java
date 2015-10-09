@@ -175,10 +175,6 @@ public class GUIMainWindow extends BasicWindow implements View {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-
-		Button displayHint = new Button(shell, SWT.PUSH);
-		displayHint.setText("Get a Hint!");
-		displayHint.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
 		
 		Button solveMaze = new Button(shell, SWT.PUSH);
 		solveMaze.setText("Solve Maze");
@@ -200,6 +196,26 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 
+		Button displayHint = new Button(shell, SWT.PUSH);
+		displayHint.setText("Get a Hint!");
+		displayHint.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		displayHint.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//COMPLETE
+				if (maze3dDisplay.getMazeName() != null)
+				{
+					maze3dDisplay.setDisplayedHint(true);
+					setUserInput("display solution " + maze3dDisplay.getMazeName());
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
+		
 		Button displaySolution = new Button(shell, SWT.PUSH);
 		displaySolution.setText("Display Solution");
 		displaySolution.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -209,6 +225,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			public void widgetSelected(SelectionEvent e) {
 				if (maze3dDisplay.getMazeName() != null)
 				{
+					maze3dDisplay.setDisplayedSolution(true);
 					setUserInput("display solution " + maze3dDisplay.getMazeName());
 				}
 			}
@@ -321,7 +338,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 		else if (data instanceof List)
 		{
 			ArrayList<String> solution = (ArrayList<String>) data;
-			maze3dDisplay.setDisplaySolution(true);
+			//maze3dDisplay.setDisplayedSolution(true);
 			maze3dDisplay.displaySolution(solution);
 		}
 	}

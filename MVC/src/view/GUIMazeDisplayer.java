@@ -17,7 +17,8 @@ public abstract class GUIMazeDisplayer extends Canvas {
 	String mazeName = null;
 	Position characterPosition;
 	boolean hasWon = false;
-	boolean displaySolution = false;
+	boolean displayedSolution = false;
+	boolean displayedHint = false;
 	
 	/**
 	 * Constructor to set parent composite and style.
@@ -37,6 +38,7 @@ public abstract class GUIMazeDisplayer extends Canvas {
 		this.maze = maze;
 		setCharacterPosition(this.maze.getStartPosition());
 		hasWon = false;
+		displayedSolution = false;
 	}
 	
 	/**
@@ -72,19 +74,35 @@ public abstract class GUIMazeDisplayer extends Canvas {
 	}
 	
 	/**
-	 * Gets isDisplaySolution
-	 * @return isDisplaySolution
+	 * Gets isDisplayedSolution
+	 * @return isDisplayedSolution
 	 */
-	public boolean isDisplaySolution() {
-		return displaySolution;
+	public boolean isDisplayedSolution() {
+		return displayedSolution;
 	}
 
 	/**
-	 * Sets displaySolution
-	 * @param isDisplaySolution
+	 * Sets displayedSolution
+	 * @param isDisplayedSolution
 	 */
-	public void setDisplaySolution(boolean displaySolution) {
-		this.displaySolution = displaySolution;
+	public void setDisplayedSolution(boolean displaySolution) {
+		this.displayedSolution = displaySolution;
+	}
+
+	/**
+	 * Gets displayedHint;
+	 * @return displayedHint;
+	 */
+	public boolean isDisplayedHint() {
+		return displayedHint;
+	}
+
+	/**
+	 * Sets displayedHint
+	 * @param displayedHint
+	 */
+	public void setDisplayedHint(boolean displayedHint) {
+		this.displayedHint = displayedHint;
 	}
 
 	/**

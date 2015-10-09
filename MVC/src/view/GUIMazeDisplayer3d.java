@@ -3,13 +3,11 @@ package view;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-
 import algorithms.mazeGenerators.Position;
 
 /**
@@ -25,6 +23,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	final Color path = new Color(null, 255, 255, 255);
 	final Color background = new Color(null, 191, 191, 191);
 	ArrayList<Position> solution = new ArrayList<Position>();
+	Position hint = new Position(-1, -1, -1);
 	
 	/**
 	 * Constructor to set parent composite and style, and paint the maze.
@@ -109,8 +108,15 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			}
 		}
 		
+		// Reset hint
+		if (characterPosition.compareTo(hint) == 0)
+		{
+			displayedHint = false;
+			hint.setX(-1);
+		}
+		
 		// Display solution
-		if (isDisplaySolution())
+		if (isDisplayedSolution())
 		{
 			for (Position p : solution)
 			{
@@ -128,8 +134,39 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 					e.gc.drawImage(lead, 0, 0, lead.getBounds().width, lead.getBounds().height, cellWidth * p.getX(), cellHeight * p.getY()+(getSize().y/4)*3, cellWidth, cellHeight);
 				}
 			}
-
 		}
+		
+		// Display hint
+		if (isDisplayedHint())
+		{
+			if (hint.getX() == -1)
+			{
+				for (int i = solution.size() - 1; i >= 0; i--)
+				{
+					hint = solution.get(i);
+					if (hint.getZ() == (characterPosition.getZ() + 1))
+					{
+						break;
+					}
+					else if (solution.get(i).getZ() == characterPosition.getZ())
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				// Paint hint position
+				if (hint.getZ() == (characterPosition.getZ() + 1))
+				{
+					e.gc.drawImage(lead, 0, 0, lead.getBounds().width, lead.getBounds().height, cellWidth * hint.getX(), cellHeight * hint.getY()+(getSize().y/12), cellWidth, cellHeight);
+				}
+				else if (hint.getZ() == characterPosition.getZ())
+				{
+					e.gc.drawImage(lead, 0, 0, lead.getBounds().width, lead.getBounds().height, cellWidth * hint.getX(), cellHeight * hint.getY()+((getSize().y/4)+(getSize().y/6)), cellWidth, cellHeight);
+				}
+			}
+		}		
 		
 		if ((characterPosition.compareTo(maze.getGoalPosition()) == 0) && (floor == characterPosition.getZ() - 1))
 		{

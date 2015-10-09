@@ -29,7 +29,7 @@ public class Run {
 		}
 		else if (properties.getView().equals("GUI"))
 		{
-			GUIMainWindow gui = new GUIMainWindow(800, 600);
+			GUIMainWindow gui = new GUIMainWindow(700, 600);
 			Presenter presenter = new Presenter(model, gui);
 			gui.addObserver(presenter);
 			model.addObserver(presenter);
