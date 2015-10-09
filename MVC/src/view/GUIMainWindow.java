@@ -7,25 +7,44 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Text;
-
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
+import presenter.Properties;
 
+/**
+ * Main window to present the game.
+ * <p>
+ * Contains a menu on the left, and a game on the right side.<br>
+ * Each part can be easily modified by using different classes.
+ */
 public class GUIMainWindow extends BasicWindow implements View {
 
 	String userInput;
 	GUIMazeDisplayer3d maze3dDisplay;
 	HashMap<String, String> inputHashMap;
+	String defaultMazeSolvingAlgorithm = "bfs";
+	String defaultMazeName = "NewMaze";
+	String defaultX = "10";
+	String defaultY = "4";
+	String defaultFloors = "5";
 	
+	/**
+	 * Constructor to set window size.
+	 * @param width
+	 * @param height
+	 */
 	public GUIMainWindow(int width, int height) {
 		super(width, height);
 	}
 
+	/**
+	 * Sets all widgets in the window.
+	 */
 	@Override
 	void initWidgets() {
 
 		shell.setLayout(new GridLayout(2, false));
+		setUserInput("properties Properties.xml");
 		
 		Button generateMaze  = new Button(shell, SWT.PUSH);
 		generateMaze.setText("Generate Maze");
@@ -34,7 +53,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				GUIGenerateMazeDialog generateMazeDialog = new GUIGenerateMazeDialog(shell);
+				GUIGenerateMazeDialog generateMazeDialog = new GUIGenerateMazeDialog(shell, defaultMazeName, defaultX, defaultY, defaultFloors);
 				inputHashMap = generateMazeDialog.open();
 				if (!(inputHashMap == null))
 				{
@@ -49,7 +68,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 		});
 
 		maze3dDisplay = new GUIMazeDisplayer3d(shell, SWT.BORDER);
-		maze3dDisplay.setMaze(new MyMaze3dGenerator(10, 4, 3).generate()); //DELETE!!!
+		//maze3dDisplay.setMaze(new MyMaze3dGenerator(10, 4, 3).generate()); //DELETE!!!
 		maze3dDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 11));
 		
 		
@@ -164,7 +183,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				GUISolveMazeDialog solveMazeDialog = new GUISolveMazeDialog(shell);
+				GUISolveMazeDialog solveMazeDialog = new GUISolveMazeDialog(shell, defaultMazeSolvingAlgorithm);
 				inputHashMap = solveMazeDialog.open();
 				if (!(inputHashMap == null))
 				{
@@ -181,9 +200,25 @@ public class GUIMainWindow extends BasicWindow implements View {
 		displaySolution.setText("Display Solution");
 		displaySolution.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
 
-		Button setProperties = new Button(shell, SWT.PUSH);
-		setProperties.setText("Set Properties");
-		setProperties.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		Button loadProperties = new Button(shell, SWT.PUSH);
+		loadProperties.setText("Load Properties");
+		loadProperties.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		loadProperties.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				GUILoadPropertiesDialog loadPropertiesDialog = new GUILoadPropertiesDialog(shell);
+				inputHashMap = loadPropertiesDialog.open();
+				if (!(inputHashMap == null))
+				{
+					setUserInput("properties " + inputHashMap.get("filePath"));					
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
 		
 		Button exit = new Button(shell, SWT.PUSH);
 		exit.setText("Exit");
@@ -202,6 +237,9 @@ public class GUIMainWindow extends BasicWindow implements View {
 		});
 	}
 
+	/**
+	 * Receives input from the presenter and acts accordingly.
+	 */
 	@Override
 	public void displayData(Object data) {
 		if (data instanceof Maze3d)
@@ -219,18 +257,35 @@ public class GUIMainWindow extends BasicWindow implements View {
 				}
 			});
 		}
+		else if (data instanceof Properties)
+		{
+			Properties properties = (Properties) data;
+			if (properties.isPropertiesSet())
+			{
+				defaultMazeSolvingAlgorithm = properties.getMazeSolvingAlgorithm().toLowerCase();	
+				defaultMazeName = properties.getMazeName();
+				defaultX = String.valueOf(properties.getMazeWidth());
+				defaultY = String.valueOf(properties.getMazeHeight());
+				defaultFloors = String.valueOf(properties.getMazeFloors());
+			}
+		}
 	}
 
+	/**
+	 * Gets the wanted command (used mainly by the presenter).
+	 */
 	@Override
 	public String getUserCommand() {
 		return userInput;
 	}
 
+	/**
+	 * Sets the userInput.
+	 */
 	@Override
 	public void setUserInput(String userInput) {
 		this.userInput = userInput;
 		setChanged();
 		notifyObservers();		
 	}
-
 }

@@ -16,19 +16,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Dialog to set all data needed for the File Size operation.
+ * Dialog to set all data needed for the Load Properties operation.
  */
-public class GUIFileSizeDialog extends GUISubMenu {
+public class GUILoadPropertiesDialog extends GUISubMenu {
 
-	private static final String[] FILTER_TYPES = {"Maze3d files (*.maz)"};
-	private static final String[] FILTER_SUFFIX = {"*.maz"};
+	private static final String[] FILTER_TYPES = {"Properties files (*.xml)"};
+	private static final String[] FILTER_SUFFIX = {"*.xml"};
 	
 	/**
 	 * Constructor to use with manual style definition.
 	 * @param parent
 	 * @param style
 	 */
-	public GUIFileSizeDialog(Shell parent)
+	public GUILoadPropertiesDialog(Shell parent)
 	{
 		// Pass the default styles here
 		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -39,11 +39,11 @@ public class GUIFileSizeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUIFileSizeDialog(Shell parent, int style)
+	public GUILoadPropertiesDialog(Shell parent, int style)
 	{
 		// Let users override the default styles
 		super(parent, style);
-		setText("File size");
+		setText("Load properties");
 	}
 	
 	/**
@@ -83,10 +83,10 @@ public class GUIFileSizeDialog extends GUISubMenu {
 	    
 	    // Create the OK button and add a handler,
 	    // so that pressing it will set the HashMap with the user's input
-	    Button ok = new Button(shell, SWT.PUSH);
-	    ok.setText("OK");
-	    ok.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
-	    ok.addSelectionListener(new SelectionAdapter()
+	    Button load = new Button(shell, SWT.PUSH);
+	    load.setText("Load");
+	    load.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
+	    load.addSelectionListener(new SelectionAdapter()
 	    {
 	    	public void widgetSelected(SelectionEvent event)
 	    	{
@@ -109,6 +109,6 @@ public class GUIFileSizeDialog extends GUISubMenu {
 	    });
 
 	    // Set the Load button as default
-	    shell.setDefaultButton(ok);
+	    shell.setDefaultButton(load);
 	}
 }

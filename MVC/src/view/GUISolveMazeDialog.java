@@ -14,17 +14,22 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Dialog to set all data needed for the Solve Maze operation.
+ */
 public class GUISolveMazeDialog extends GUISubMenu {
 
+	String defaultMazeSolvingAlgorithm;
+	
 	/**
 	 * Constructor to use with manual style definition.
 	 * @param parent
 	 * @param style
 	 */
-	public GUISolveMazeDialog(Shell parent)
+	public GUISolveMazeDialog(Shell parent, String mazeSolvingAlgorithm)
 	{
 		// Pass the default styles here
-		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		this(parent, mazeSolvingAlgorithm, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 	}
 
 	/**
@@ -32,11 +37,12 @@ public class GUISolveMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUISolveMazeDialog(Shell parent, int style)
+	public GUISolveMazeDialog(Shell parent, String mazeSolvingAlgorithm, int style)
 	{
 		// Let users override the default styles
 		super(parent, style);
 		setText("Solve maze");
+		defaultMazeSolvingAlgorithm = mazeSolvingAlgorithm;
 	}
 	
 	/**
@@ -83,6 +89,20 @@ public class GUISolveMazeDialog extends GUISubMenu {
 	    Button air = new Button(shell, SWT.RADIO);
 	    air.setText("A* Algorithm + Air Distance heuristic method");
 	    air.setLayoutData(new GridData(SWT.NONE, SWT.None, true, true, 2, 1));
+	    
+	    // Mark default algorithm
+	    if (defaultMazeSolvingAlgorithm.equals("bfs"))
+	    {
+	    	bfs.setSelection(true);
+	    }
+	    else if (defaultMazeSolvingAlgorithm.equals("manhattan"))
+	    {
+	    	manhattan.setSelection(true);
+	    }
+	    else if (defaultMazeSolvingAlgorithm.equals("air"))
+	    {
+	    	air.setSelection(true);
+	    }
     
 	    // Create the OK button and add a handler, so that pressing it will set the HashMap with the user's input
 	    Button solve = new Button(shell, SWT.PUSH);

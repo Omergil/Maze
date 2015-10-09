@@ -7,6 +7,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * An abstract class to be used by a new dialog.
+ * <p>
+ * The class implements methods used by other dialogs in the program.
+ */
 public abstract class GUISubMenu extends Dialog {
 
 	protected HashMap<String, String> input = null;

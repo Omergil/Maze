@@ -15,16 +15,24 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Dialog to set all data needed for the Generate Maze operation.
+ */
 public class GUIGenerateMazeDialog extends GUISubMenu {
 
+	String defaultMazeName;
+	String defaultX;
+	String defaultY;
+	String defaultFloors;
+	
 	/**
 	 * Constructor to use with predefined style.
 	 * @param parent
 	 */
-	public GUIGenerateMazeDialog(Shell parent)
+	public GUIGenerateMazeDialog(Shell parent, String mazeName, String x, String y, String floors)
 	{
 		// Pass the default styles here
-		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		this(parent, mazeName, x, y, floors, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 	}
 
 	/**
@@ -32,11 +40,15 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	 * @param parent
 	 * @param style
 	 */
-	public GUIGenerateMazeDialog(Shell parent, int style)
+	public GUIGenerateMazeDialog(Shell parent, String mazeName, String x, String y, String floors, int style)
 	{
 		// Let users override the default styles
 		super(parent, style);
 		setText("Generate maze");
+		defaultMazeName = mazeName;
+		defaultX = x;
+		defaultY = y;
+		defaultFloors = floors;
 	}
 
 	/**
@@ -59,7 +71,8 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    
 	    // Display the maze name box
 	    final Text mazeNameText = new Text(shell, SWT.BORDER);
-	    mazeNameText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));	 
+	    mazeNameText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));
+	    mazeNameText.setText(defaultMazeName);
 	    mazeNameText.addListener(SWT.Verify, new Listener()
 	    {
 		    @Override
@@ -76,6 +89,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    
 	    // Display the X box
 	    final Text xText = new Text(shell, SWT.BORDER);
+	    xText.setText(defaultX);
 	    xText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    xText.addListener(SWT.Verify, new Listener()
 	    {
@@ -93,6 +107,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    
 	    // Display the Y box
 	    final Text yText = new Text(shell, SWT.BORDER);
+	    yText.setText(defaultY);
 	    yText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    yText.addListener(SWT.Verify, new Listener()
 	    {
@@ -110,6 +125,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    
 	    // Display the floors box
 	    final Text floorsText = new Text(shell, SWT.BORDER);
+	    floorsText.setText(defaultFloors);
 	    floorsText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
 	    floorsText.addListener(SWT.Verify, new Listener() {
 			

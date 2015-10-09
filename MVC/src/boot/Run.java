@@ -13,22 +13,28 @@ import view.GUIMainWindow;
  */
 public class Run {
 	public static void main(String[] args) throws FileNotFoundException {
-		//DELETE
-		Properties p = new Properties();
 		
-		// DON'T DELETE - CLI RUN! COMMENTED TO TEST GUI!!!
-		/*CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
+		Properties properties = new Properties("Properties.xml");
+		properties.load();
 		Maze3dModel model = new Maze3dModel();
-		Presenter presenter = new Presenter(model, ui);
-		ui.addObserver(presenter);
-		model.addObserver(presenter);
-		ui.getCli().run();*/
+		model.setNumOfThreads(properties.getNumOfThreads());
 		
-		GUIMainWindow gui = new GUIMainWindow(800, 600);
-		Maze3dModel model = new Maze3dModel();
-		Presenter presenter = new Presenter(model, gui);
-		gui.addObserver(presenter);
-		model.addObserver(presenter);
-		gui.run();
+		if (properties.getView().equals("CLI"))
+		{
+			CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
+			Presenter presenter = new Presenter(model, ui);
+			ui.addObserver(presenter);
+			model.addObserver(presenter);
+			ui.getCli().run();			
+		}
+		else if (properties.getView().equals("GUI"))
+		{
+			GUIMainWindow gui = new GUIMainWindow(800, 600);
+			Presenter presenter = new Presenter(model, gui);
+			gui.addObserver(presenter);
+			model.addObserver(presenter);
+			gui.run();			
+		}
+		
 	}
 }

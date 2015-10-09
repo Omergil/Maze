@@ -14,6 +14,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Dialog to set all data needed for the Maze Size operation.
+ */
 public class GUIMazeSizeDialog extends GUISubMenu {
 
 	/**

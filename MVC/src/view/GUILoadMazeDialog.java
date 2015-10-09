@@ -15,6 +15,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Dialog to set all data needed for the Load Maze operation.
+ */
 public class GUILoadMazeDialog extends GUISubMenu {
 
 	private static final String[] FILTER_TYPES = {"Maze3d files (*.maz)"};
@@ -43,6 +46,10 @@ public class GUILoadMazeDialog extends GUISubMenu {
 		setText("Load maze");
 	}
 	
+	/**
+	 * Creates the contents of the sub menu.
+	 * @param shell the dialog window
+	 */
 	@Override
 	protected void createContents(Shell shell) {
 		shell.setLayout(new GridLayout(3, true));

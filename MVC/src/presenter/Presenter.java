@@ -42,6 +42,7 @@ public class Presenter implements Observer {
 		hashMap.put("exit", new Exit());
 		hashMap.put("savemap", new SaveMap());
 		hashMap.put("loadmap", new LoadMap());
+		hashMap.put("properties", new LoadProperties());
 	}
 
 	/**
@@ -68,10 +69,7 @@ public class Presenter implements Observer {
 		
 		else if (observable == model)
 		{
-			if (arg1 instanceof String)
-			{
-				ui.displayData(arg1);				
-			}
+			ui.displayData(arg1);
 		}
 	}
 	
@@ -191,9 +189,21 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))
+			if ((arguments.get(1).equals("maze")) && (arguments.size() >= 4))
 			{
-				model.saveMaze(arguments.get(2), arguments.get(3));				
+				if (arguments.size() > 4)
+				{
+					String filePath = arguments.get(3);
+					for (int i = 4; i < arguments.size(); i++)
+					{
+						filePath = filePath + " " + arguments.get(i);
+					}
+					model.saveMaze(arguments.get(2), filePath);
+				}
+				else
+				{
+					model.saveMaze(arguments.get(2), arguments.get(3));			
+				}						
 			}
 			else
 			{
@@ -241,10 +251,26 @@ public class Presenter implements Observer {
 	{
 		@Override
 		public void doCommand() {
-			if ((arguments.get(1).equals("maze")) && (arguments.size() == 4))
-				model.loadMaze(arguments.get(2), arguments.get(3));
+			if ((arguments.get(1).equals("maze")) && (arguments.size() >= 4))
+			{
+				if (arguments.size() > 4)
+				{
+					String filePath = arguments.get(2);
+					for (int i = 3; i < arguments.size() - 1; i++)
+					{
+						filePath = filePath + " " + arguments.get(i);
+					}
+					model.loadMaze(filePath, arguments.get(arguments.size() - 1));
+				}
+				else
+				{
+					model.loadMaze(arguments.get(2), arguments.get(3));					
+				}
+			}
 			else
+			{
 				wrongInput();
+			}
 		}
 	}
 	
@@ -272,6 +298,26 @@ public class Presenter implements Observer {
 					(arguments.get(2).toLowerCase().equals("manhattan")) || (arguments.get(2).toLowerCase().equals("air"))))
 			{
 				model.solve(arguments.get(1), arguments.get(2));		
+			}
+			else
+			{
+				wrongInput();
+			}
+		}
+	}
+	
+	public class LoadProperties implements Command{
+
+		@Override
+		public void doCommand() {
+			if (arguments.size() >= 2)
+			{
+				String filePath = arguments.get(1);
+				for (int i = 2; i < arguments.size(); i++)
+				{
+					filePath = filePath + " " + arguments.get(i);
+				}
+				model.loadProperties(filePath);				
 			}
 			else
 			{

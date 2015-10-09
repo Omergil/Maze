@@ -6,25 +6,60 @@ import org.eclipse.swt.widgets.Composite;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 
+/**
+ * Canvas to display a maze game.
+ * <p>
+ * To be extended by other canvas-classes. 
+ */
 public abstract class GUIMazeDisplayer extends Canvas {
 
-	Maze3d maze;
+	Maze3d maze = null;
 	Position characterPosition;
 	
+	/**
+	 * Constructor to set parent composite and style.
+	 * @param parent
+	 * @param style
+	 */
 	GUIMazeDisplayer(Composite parent, int style) {
 		super(parent, style);
 	}
 	
+	/**
+	 * Set the maze to be used on the canvas.
+	 * @param maze
+	 */
 	public void setMaze(Maze3d maze)
 	{
 		this.maze = maze;
 		setCharacterPosition(this.maze.getStartPosition());
 	}
 
+	/**
+	 * Sets the character position.
+	 * @param position
+	 */
 	public abstract void setCharacterPosition(Position position);
-	public abstract void moveLeft();
-	public abstract void moveRight();
-	public abstract void moveForwards();
-	public abstract void moveBackwards();
 	
+	/**
+	 * Moves the character to the left.
+	 */
+	public abstract void moveLeft();
+	
+	/**
+	 * Moves the character to the right.
+	 */
+	public abstract void moveRight();
+	
+	
+	/**
+	 * Moves the character forwards.
+	 */
+	public abstract void moveForwards();
+	
+	
+	/**
+	 * Moves the character backwards.
+	 */
+	public abstract void moveBackwards();
 }

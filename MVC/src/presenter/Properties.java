@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 public class Properties implements Serializable {
 	
-	private static final String FILENAME = "Properties.xml";
+	String filePath;
 	boolean propertiesSet = false;
 	int numOfThreads;
 	String mazeSolvingAlgorithm;
@@ -26,6 +26,22 @@ public class Properties implements Serializable {
 	int mazeFloors;
 	String view;
 	
+	/**
+	 * Gets the file path.
+	 * @return String - file path.
+	 */
+	public String getFilePath() {
+		return filePath;
+	}
+
+	/**
+	 * Sets the file path.
+	 * @param filePath
+	 */
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
 	/**
 	 * Check if the properties were successfully set.
 	 * @return True if the properties were successfully set.
@@ -149,8 +165,8 @@ public class Properties implements Serializable {
 	/**
 	 * Default constructor.
 	 */
-	public Properties() {
-		load();
+	public Properties(String filePath) {
+		this.filePath = filePath;
 	}
 	
 	/**
@@ -162,10 +178,10 @@ public class Properties implements Serializable {
 	{		
 		XMLEncoder e;
 		try {
-			e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(FILENAME)));
+			e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)));
 			numOfThreads = 20;
-			mazeSolvingAlgorithm = "Manhattan";
-			mazeName = "My_Maze";
+			mazeSolvingAlgorithm = "bfs";
+			mazeName = "mymaze";
 			mazeWidth = 10;
 			mazeHeight = 8;
 			mazeFloors = 3;
@@ -195,7 +211,7 @@ public class Properties implements Serializable {
 	{
 		XMLDecoder d;
 		try {
-			d = new XMLDecoder(new BufferedInputStream(new FileInputStream(FILENAME)));
+			d = new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)));
 			try {
 				this.numOfThreads = (int)d.readObject();
 				this.mazeSolvingAlgorithm = (String)d.readObject();
@@ -204,14 +220,11 @@ public class Properties implements Serializable {
 				this.mazeHeight = (int)d.readObject();
 				this.mazeFloors = (int)d.readObject();
 				this.view = (String)d.readObject();
-				propertiesSet = true;				
+				propertiesSet = true;
 			} catch (Exception e) {
-				// Create a new valid Properties.xml files
 				save();
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			// Create a new valid Properties.xml files
 			save();
 		}
 	}

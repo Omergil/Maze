@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,17 +31,40 @@ import algorithms.search.MazeAirDistance;
 import algorithms.search.MazeManhattanDistance;
 import algorithms.search.Solution;
 import algorithms.search.State;
+import boot.Run;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
+import presenter.Properties;
 
 /**
  * Model object for MVP architecture, specifically for Maze3d.
  */
 public class Maze3dModel extends Observable implements Model {
 
+	int numOfThreads = 20;
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
-	ExecutorService exec = Executors.newFixedThreadPool(2);
+	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
+
+	
+	/**
+	 * Gets the number of threads.
+	 * @return int - number of threads.
+	 */
+	public int getNumOfThreads() {
+		return numOfThreads;
+	}
+
+	/**
+	 * Sets the number of threads.
+	 * @param numOfThreads
+	 */
+	public void setNumOfThreads(int threads) {
+		if (numOfThreads > 3)
+		{
+			this.numOfThreads = threads;			
+		}
+	}
 
 	/**
 	 * Returns all files and folders for a given path on the file system.
@@ -447,6 +471,22 @@ public class Maze3dModel extends Observable implements Model {
 		}
 	}
 	
-	
-	
+	/**
+	 * Receives a path to an xml properties file and loads its content.
+	 */
+	@Override
+	public void loadProperties(String filePath) {
+		Properties properties = new Properties(filePath);
+		properties.load();
+		if (properties.isPropertiesSet())
+		{
+			setChanged();
+			notifyObservers(properties);
+		}
+		else
+		{
+			setChanged();
+			notifyObservers("Properties file is corrupted / doesn't exist.");
+		}
+	}
 }

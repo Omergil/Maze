@@ -15,6 +15,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Dialog to set all data needed for the Save Maze operation.
+ */
 public class GUISaveMazeDialog extends GUISubMenu {
 
 	private static final String[] FILTER_TYPES = {"Maze3d files (*.maz)"};
@@ -42,7 +45,11 @@ public class GUISaveMazeDialog extends GUISubMenu {
 		super(parent, style);
 		setText("Save maze");
 	}
-	
+ 	
+	/**
+	 * Creates the contents of the sub menu.
+	 * @param shell the dialog window
+	 */
 	@Override
 	protected void createContents(Shell shell)
 	{
