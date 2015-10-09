@@ -257,10 +257,10 @@ public class GUIMainWindow extends BasicWindow implements View {
 				if (e.keyCode == SWT.ARROW_RIGHT) {
 					maze3dDisplay.moveRight();
 				}
-				if (e.keyCode == SWT.ARROW_UP) {
+				if (e.keyCode == SWT.ARROW_DOWN) {
 					maze3dDisplay.moveForwards();
 				}
-				if (e.keyCode == SWT.ARROW_DOWN) {
+				if (e.keyCode == SWT.ARROW_UP) {
 					maze3dDisplay.moveBackwards();
 				}
 				if (e.keyCode == SWT.PAGE_UP) {
