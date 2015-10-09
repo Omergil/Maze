@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.concurrent.Callable;
@@ -43,6 +44,7 @@ public class Maze3dModel extends Observable implements Model {
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
+	Object[][] solArray;
 
 	/**
 	 * Gets the number of threads.
@@ -434,16 +436,54 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void saveMap()
 	{
-		String path = "c:/zipfile.zip";
-		ObjectOutputStream os = null;
+		//turn stores to one array
+		//create array of solution
+		HashMap<String, Solution> temp = solutionsStore;
+		HashMap<String,Maze3d> temp2 = mazeStore;
+		
+		//get solutions maze from solutionStore and put it to array
+		Collection<Solution> solutionmaze;
+		solutionmaze = temp.values();
+		Object[] tempsolarray = solutionmaze.toArray();
+		//get solutions maze name from solutionStore and put it to array
+		Collection<String> solutionmazenames;
+		solutionmazenames = temp.keySet();
+		Object[] tempsolnamearray = solutionmazenames.toArray();
+
+		//get maze3d object from mazeStore and put it to array
+		Collection<Maze3d> maze3dobject;
+		maze3dobject = temp2.values();
+		Object[] tempmaze3darray = maze3dobject.toArray();
+		//get maze3d name from mazeStore and put it to array
+		Collection<String> maze3dnames;
+		maze3dnames = temp2.keySet();
+		Object[] tempmaze3namedarray = maze3dnames.toArray();
+		
+		
+		//add solutions, names and maze3d object to array 
+		for (int i=0; i < tempsolnamearray.length; i++)
+		{
+			solArray[i][0] = tempsolnamearray[i];
+			solArray[i][1] = tempsolarray[i];
+			for(int j=0; j < tempmaze3namedarray.length;j++)
+			{
+				if (tempmaze3namedarray[j] == solArray[i][0])
+				{
+					solArray[i][2] = tempmaze3darray[j];
+				}
+			}
+		}
+		
+		//save the solution array
 		try {
-			os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream(path)));
-			os.writeObject(toCompressedBytes(solutionsStore));
+			ObjectOutputStream os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
+			os.writeObject(solArray);
 			os.flush();
 			os.close();
 		} catch (IOException e) {
 			setChanged();
 			notifyObservers("Cannot save map.");
+			
 		}
 	}
 	
@@ -455,17 +495,26 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void loadMap()
 	{
-		String path = "c:/zipfile.zip";
 		ObjectInputStream is = null;
 		try {
-			is = new ObjectInputStream(new GZIPInputStream(new FileInputStream(path)));
-			byte b[] = new byte[toCompressedBytes(solutionsStore).length];
-			is.read(b);
+			is = new ObjectInputStream(new GZIPInputStream(new FileInputStream("zipfile.zip")));
+			solArray = (Object[][])is.readObject();
 			is.close();
 		} catch (IOException e) {
 			setChanged();
 			notifyObservers("Cannot load map.");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		
+		//turn the Object[][] to hash map
+		HashMap<String, Solution> tempmap = new HashMap<String, Solution>();
+		for (int i=0; i<solArray[0].length; i++)
+		{
+			tempmap.put(solArray[i][0].toString(), (Solution)solArray[i][1]);
+		}
+		
+		solutionsStore = tempmap;
 	}
 	
 	/**
