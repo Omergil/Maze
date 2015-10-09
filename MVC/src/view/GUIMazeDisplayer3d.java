@@ -136,7 +136,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		
 		//get position possible moves
 		moves = maze.getPossibleMoves(characterPosition);
-		for (int i=0;i < moves.length-1; i++)
+		for (int i=0;i < moves.length; i++)
 		{
 			//check if left is possible
 			if (moves[i] == "Left")
@@ -166,7 +166,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		
 		//get position possible moves
 		moves = maze.getPossibleMoves(characterPosition);
-		for (int i=0;i < moves.length-1; i++)
+		for (int i=0;i < moves.length; i++)
 		{
 			//check if right is possible
 			if (moves[i] == "Right")
@@ -197,7 +197,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		
 		//get position possible moves
 		moves = maze.getPossibleMoves(characterPosition);
-		for (int i=0;i < moves.length-1; i++)
+		for (int i=0;i < moves.length; i++)
 		{
 			//check if forwards is possible
 			if (moves[i] == "Forwards")
@@ -228,7 +228,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		
 		//get position possible moves
 		moves = maze.getPossibleMoves(characterPosition);
-		for (int i=0;i < moves.length-1; i++)
+		for (int i=0;i < moves.length; i++)
 		{
 			//check if backwards is possible
 			if (moves[i] == "Backwards")
@@ -258,7 +258,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		
 		//get position possible moves
 		moves = maze.getPossibleMoves(characterPosition);
-		for (int i=0;i < moves.length-1; i++)
+		for (int i=0;i < moves.length; i++)
 		{
 			//check if up is possible
 			if (moves[i] == "Up")
@@ -288,7 +288,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		
 		//get position possible moves
 		moves = maze.getPossibleMoves(characterPosition);
-		for (int i=0;i < moves.length-1; i++)
+		for (int i=0;i < moves.length; i++)
 		{
 			//check if down is possible
 			if (moves[i] == "Down")
