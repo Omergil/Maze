@@ -70,9 +70,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 		});
 
 		maze3dDisplay = new GUIMazeDisplayer3d(shell, SWT.BORDER);
-		//maze3dDisplay.setMaze(new MyMaze3dGenerator(10, 4, 3).generate()); //DELETE!!!
 		maze3dDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 11));
-		
 		
 		Button displayMaze = new Button(shell, SWT.PUSH);
 		displayMaze.setText("Display a maze");
@@ -280,6 +278,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 	 */
 	@Override
 	public void displayData(Object data) {
+		
 		if (data instanceof Maze3d)
 		{
 			Maze3d maze = (Maze3d) data;
