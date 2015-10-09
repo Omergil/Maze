@@ -1,5 +1,9 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -15,8 +19,12 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 
 	Image wall = new Image(getShell().getDisplay(), "Resources\\brick.png");
     Image character = new Image(getShell().getDisplay(), "Resources\\character.png");
+    Image goal = new Image(getShell().getDisplay(), "Resources\\goal.png");
+    Image finish = new Image(getShell().getDisplay(), "Resources\\finish.png");
+    Image lead = new Image(getShell().getDisplay(), "Resources\\lead.png");
 	final Color path = new Color(null, 255, 255, 255);
 	final Color background = new Color(null, 191, 191, 191);
+	ArrayList<Position> solution = new ArrayList<Position>();
 	
 	/**
 	 * Constructor to set parent composite and style, and paint the maze.
@@ -52,7 +60,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			}
 		});
 	}
-	
+
 	/**
 	 * Paints a maze on the canvas, according to its data.
 	 * @param e
@@ -60,7 +68,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	 * @param mazeHeight
 	 */
 	public void paintMaze(PaintEvent e, int floor, int mazeHeight)
-	{		
+	{	
 		e.gc.setBackground(path);
 		
 		int windowWidth = getSize().x;
@@ -101,8 +109,58 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			}
 		}
 		
-		// Set character image
+		// Display solution
+		if (isDisplaySolution())
+		{
+			for (Position p : solution)
+			{
+				// Paint goal position
+				if (p.getZ() == characterPosition.getZ())
+				{
+					e.gc.drawImage(lead, 0, 0, lead.getBounds().width, lead.getBounds().height, cellWidth * p.getX(), cellHeight * p.getY()+((getSize().y/4)+(getSize().y/6)), cellWidth, cellHeight);
+				}
+				else if (p.getZ() == (characterPosition.getZ() + 1))
+				{
+					e.gc.drawImage(lead, 0, 0, lead.getBounds().width, lead.getBounds().height, cellWidth * p.getX(), cellHeight * p.getY()+(getSize().y/12), cellWidth, cellHeight);
+				}
+				else if (p.getZ() == (characterPosition.getZ() - 1))
+				{
+					e.gc.drawImage(lead, 0, 0, lead.getBounds().width, lead.getBounds().height, cellWidth * p.getX(), cellHeight * p.getY()+(getSize().y/4)*3, cellWidth, cellHeight);
+				}
+			}
+
+		}
+		
+		if ((characterPosition.compareTo(maze.getGoalPosition()) == 0) && (floor == characterPosition.getZ() - 1))
+		{
+			e.gc.drawImage(finish,0,0,finish.getBounds().width,finish.getBounds().height,cellWidth*characterPosition.getX(), cellHeight*characterPosition.getY()+(getSize().y/4)+(getSize().y/6), cellWidth, cellHeight);
+		}
+		
+		if (hasWon)
+		{
+			return;
+		}
+		
+		if ((characterPosition.compareTo(maze.getGoalPosition()) == 0) && (floor == characterPosition.getZ() - 1)
+				&& (hasWon == false))
+		{
+			new GUIMessageBox(getShell(), "You won!");
+			hasWon = true;
+			return;
+		}
+		
+		// Paint character image
 	    e.gc.drawImage(character,0,0,character.getBounds().width,character.getBounds().height,cellWidth*characterPosition.getX(), cellHeight*characterPosition.getY()+(getSize().y/4)+(getSize().y/6), cellWidth, cellHeight);
+	    
+		// Paint goal position
+		if (maze.getGoalPosition().getZ() == characterPosition.getZ())
+		{
+			e.gc.drawImage(goal, 0, 0, goal.getBounds().width, goal.getBounds().height, cellWidth * maze.getGoalPosition().getX(), cellHeight * maze.getGoalPosition().getY()+((getSize().y/4)+(getSize().y/6)), cellWidth, cellHeight);
+		}
+		else if (maze.getGoalPosition().getZ() == (characterPosition.getZ() + 1))
+		{
+			e.gc.drawImage(goal, 0, 0, goal.getBounds().width, goal.getBounds().height, cellWidth * maze.getGoalPosition().getX(), cellHeight * maze.getGoalPosition().getY()+(getSize().y/12), cellWidth, cellHeight);
+		}
 	}
 
 	/**
@@ -273,7 +331,6 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			p.setZ(z);
 			moveCharacter(p);
 		}
-
 	}
 	
 	/**
@@ -303,6 +360,19 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			p.setZ(z);
 			moveCharacter(p);
 		}
-
+	}
+	
+	public void displaySolution(ArrayList<String> solutionStrings)
+	{
+		for (String step : solutionStrings)
+		{
+			Position tempPosition = new Position(0,0,0);
+			List<String> coordinates = new ArrayList<String>(Arrays.asList(step.split(",")));
+			tempPosition.setX((Integer.parseInt(coordinates.get(0))));
+			tempPosition.setY((Integer.parseInt(coordinates.get(1))));
+			tempPosition.setZ((Integer.parseInt(coordinates.get(2))));
+			solution.add(tempPosition);
+		}
+		redraw();
 	}
 }

@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,6 @@ import algorithms.search.MazeAirDistance;
 import algorithms.search.MazeManhattanDistance;
 import algorithms.search.Solution;
 import algorithms.search.State;
-import boot.Run;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
 import presenter.Properties;
@@ -46,7 +44,6 @@ public class Maze3dModel extends Observable implements Model {
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
 
-	
 	/**
 	 * Gets the number of threads.
 	 * @return int - number of threads.

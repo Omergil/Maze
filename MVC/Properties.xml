@@ -2,9 +2,9 @@
 <java version="1.8.0_51" class="java.beans.XMLDecoder">
  <int>20</int>
  <string>bfs</string>
- <string>mymaze</string>
- <int>10</int>
- <int>8</int>
+ <string>omer</string>
+ <int>6</int>
+ <int>4</int>
  <int>3</int>
  <string>GUI</string>
 </java>

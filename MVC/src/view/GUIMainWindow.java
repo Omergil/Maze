@@ -1,6 +1,9 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -10,7 +13,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import algorithms.mazeGenerators.Maze3d;
-import algorithms.mazeGenerators.MyMaze3dGenerator;
 import presenter.Properties;
 
 /**
@@ -29,6 +31,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 	String defaultX = "10";
 	String defaultY = "4";
 	String defaultFloors = "5";
+	String tempMazeName = null;
 	
 	/**
 	 * Constructor to set window size.
@@ -83,6 +86,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 				inputHashMap = displayMazeDialog.open();
 				if (!(inputHashMap == null))
 				{
+					tempMazeName = inputHashMap.get("mazeName");
 					setUserInput("display " + inputHashMap.get("mazeName"));
 				}
 			}
@@ -203,7 +207,10 @@ public class GUIMainWindow extends BasicWindow implements View {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//COMPLETE
+				if (maze3dDisplay.getMazeName() != null)
+				{
+					setUserInput("display solution " + maze3dDisplay.getMazeName());
+				}
 			}
 			
 			@Override
@@ -251,24 +258,28 @@ public class GUIMainWindow extends BasicWindow implements View {
 		maze3dDisplay.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e)
 			{
-				if (e.keyCode == SWT.ARROW_LEFT) {
-					maze3dDisplay.moveLeft();
+				if (!maze3dDisplay.hasWon)
+				{
+					if (e.keyCode == SWT.ARROW_LEFT) {
+						maze3dDisplay.moveLeft();
+					}
+					if (e.keyCode == SWT.ARROW_RIGHT) {
+						maze3dDisplay.moveRight();
+					}
+					if (e.keyCode == SWT.ARROW_DOWN) {
+						maze3dDisplay.moveForwards();
+					}
+					if (e.keyCode == SWT.ARROW_UP) {
+						maze3dDisplay.moveBackwards();
+					}
+					if (e.keyCode == SWT.PAGE_UP) {
+						maze3dDisplay.moveUp();
+					}
+					if (e.keyCode == SWT.PAGE_DOWN) {
+						maze3dDisplay.moveDown();
+					}
 				}
-				if (e.keyCode == SWT.ARROW_RIGHT) {
-					maze3dDisplay.moveRight();
-				}
-				if (e.keyCode == SWT.ARROW_DOWN) {
-					maze3dDisplay.moveForwards();
-				}
-				if (e.keyCode == SWT.ARROW_UP) {
-					maze3dDisplay.moveBackwards();
-				}
-				if (e.keyCode == SWT.PAGE_UP) {
-					maze3dDisplay.moveUp();
-				}
-				if (e.keyCode == SWT.PAGE_DOWN) {
-					maze3dDisplay.moveDown();
-				}
+				
 			}
 		});
 	}
@@ -283,6 +294,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 		{
 			Maze3d maze = (Maze3d) data;
 			maze3dDisplay.setMaze(maze);
+			maze3dDisplay.setMazeName(tempMazeName);
 			maze3dDisplay.redraw();
 		}
 		else if (data instanceof String)
@@ -305,6 +317,12 @@ public class GUIMainWindow extends BasicWindow implements View {
 				defaultY = String.valueOf(properties.getMazeHeight());
 				defaultFloors = String.valueOf(properties.getMazeFloors());
 			}
+		}
+		else if (data instanceof List)
+		{
+			ArrayList<String> solution = (ArrayList<String>) data;
+			maze3dDisplay.setDisplaySolution(true);
+			maze3dDisplay.displaySolution(solution);
 		}
 	}
 
