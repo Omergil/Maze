@@ -2,6 +2,8 @@ package view;
 
 import java.util.HashMap;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -42,7 +44,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 	 */
 	@Override
 	void initWidgets() {
-
+		
 		shell.setLayout(new GridLayout(2, false));
 		setUserInput("properties Properties.xml");
 		
@@ -199,6 +201,17 @@ public class GUIMainWindow extends BasicWindow implements View {
 		Button displaySolution = new Button(shell, SWT.PUSH);
 		displaySolution.setText("Display Solution");
 		displaySolution.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		displaySolution.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//COMPLETE
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
 
 		Button loadProperties = new Button(shell, SWT.PUSH);
 		loadProperties.setText("Load Properties");
@@ -233,6 +246,31 @@ public class GUIMainWindow extends BasicWindow implements View {
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
+		
+		//move the character on the board
+		maze3dDisplay.addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e)
+			{
+				if (e.keyCode == SWT.ARROW_LEFT) {
+					maze3dDisplay.moveLeft();
+				}
+				if (e.keyCode == SWT.ARROW_RIGHT) {
+					maze3dDisplay.moveRight();
+				}
+				if (e.keyCode == SWT.ARROW_UP) {
+					maze3dDisplay.moveForwards();
+				}
+				if (e.keyCode == SWT.ARROW_DOWN) {
+					maze3dDisplay.moveBackwards();
+				}
+				if (e.keyCode == SWT.PAGE_UP) {
+					maze3dDisplay.moveUp();
+				}
+				if (e.keyCode == SWT.PAGE_DOWN) {
+					maze3dDisplay.moveDown();
+				}
 			}
 		});
 	}

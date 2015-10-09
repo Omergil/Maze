@@ -14,6 +14,7 @@ import algorithms.mazeGenerators.Position;
 public abstract class GUIMazeDisplayer extends Canvas {
 
 	Maze3d maze = null;
+	String mazeName = null;
 	Position characterPosition;
 	
 	/**
@@ -34,7 +35,31 @@ public abstract class GUIMazeDisplayer extends Canvas {
 		this.maze = maze;
 		setCharacterPosition(this.maze.getStartPosition());
 	}
+	
+	/**
+	 * Gets the maze name.
+	 * @return String the maze name.
+	 */
+	public String getMazeName() {
+		return mazeName;
+	}
 
+	/**
+	 * Sets the maze name.
+	 * @param mazeName
+	 */
+	public void setMazeName(String mazeName) {
+		this.mazeName = mazeName;
+	}
+
+	/**
+	 * Gets the character position.
+	 * @return Character position.
+	 */
+	public Position getCharacterPosition() {
+		return characterPosition;
+	}
+	
 	/**
 	 * Sets the character position.
 	 * @param position
@@ -62,4 +87,5 @@ public abstract class GUIMazeDisplayer extends Canvas {
 	 * Moves the character backwards.
 	 */
 	public abstract void moveBackwards();
+	
 }

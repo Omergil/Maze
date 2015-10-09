@@ -1,13 +1,10 @@
 package view;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 import algorithms.mazeGenerators.Position;
 
@@ -48,7 +45,7 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 				
 				e.gc.setForeground(new Color(null, 0,0,0));
 				e.gc.setBackground(new Color(null, 0,0,0));
-			    
+				
 				paintMaze(e, characterPosition.getZ() + 1, getSize().y/12);
 				paintMaze(e, characterPosition.getZ(), (getSize().y/4)+(getSize().y/6));
 				paintMaze(e, characterPosition.getZ() - 1, (getSize().y/4)*3);
@@ -116,14 +113,44 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 		characterPosition = position;
 	}
 
+	private void moveCharacter(Position p){
+		setCharacterPosition(p);
+		getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				redraw();
+			}
+		});
+	}
+
 	/**
 	 * Method to be ran when a player presses the left key.<br>
 	 * Moves the character to the left.
 	 */
 	@Override
 	public void moveLeft() {
-		// TODO Auto-generated method stub
-
+		String[] moves;
+		boolean isPossible = false;
+		Position p = getCharacterPosition();
+		int x, y, z;
+		
+		//get position possible moves
+		moves = maze.getPossibleMoves(characterPosition);
+		for (int i=0;i < moves.length-1; i++)
+		{
+			//check if left is possible
+			if (moves[i] == "Left")
+				isPossible = true;
+		}
+		if (isPossible){
+			y = p.getY();
+			x = p.getX()-1;
+			z = p.getZ();
+			p.setY(y);
+			p.setX(x);
+			p.setZ(z);
+			moveCharacter(p);
+		}
 	}
 	
 	/**
@@ -132,7 +159,28 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	 */
 	@Override
 	public void moveRight() {
-		// TODO Auto-generated method stub
+		String[] moves;
+		boolean isPossible = false;
+		Position p = getCharacterPosition();
+		int x, y, z;
+		
+		//get position possible moves
+		moves = maze.getPossibleMoves(characterPosition);
+		for (int i=0;i < moves.length-1; i++)
+		{
+			//check if right is possible
+			if (moves[i] == "Right")
+				isPossible = true;
+		}
+		if (isPossible){
+			y = p.getY();
+			x = p.getX()+1;
+			z = p.getZ();
+			p.setY(y);
+			p.setX(x);
+			p.setZ(z);
+			moveCharacter(p);
+		}
 
 	}
 
@@ -142,7 +190,28 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	 */
 	@Override
 	public void moveForwards() {
-		// TODO Auto-generated method stub
+		String[] moves;
+		boolean isPossible = false;
+		Position p = getCharacterPosition();
+		int x, y, z;
+		
+		//get position possible moves
+		moves = maze.getPossibleMoves(characterPosition);
+		for (int i=0;i < moves.length-1; i++)
+		{
+			//check if forwards is possible
+			if (moves[i] == "Forwards")
+				isPossible = true;
+		}
+		if (isPossible){
+			y = p.getY()+1;
+			x = p.getX();
+			z = p.getZ();
+			p.setY(y);
+			p.setX(x);
+			p.setZ(z);
+			moveCharacter(p);
+		}
 
 	}
 
@@ -152,7 +221,28 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	 */
 	@Override
 	public void moveBackwards() {
-		// TODO Auto-generated method stub
+		String[] moves;
+		boolean isPossible = false;
+		Position p = getCharacterPosition();
+		int x, y, z;
+		
+		//get position possible moves
+		moves = maze.getPossibleMoves(characterPosition);
+		for (int i=0;i < moves.length-1; i++)
+		{
+			//check if backwards is possible
+			if (moves[i] == "Backwards")
+				isPossible = true;
+		}
+		if (isPossible){
+			y = p.getY()-1;
+			x = p.getX();
+			z = p.getZ();
+			p.setY(y);
+			p.setX(x);
+			p.setZ(z);
+			moveCharacter(p);
+		}
 
 	}
 	
@@ -161,7 +251,28 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	 * Moves the character to the upper floor.
 	 */
 	public void moveUp() {
-		// TODO Auto-generated method stub
+		String[] moves;
+		boolean isPossible = false;
+		Position p = getCharacterPosition();
+		int x, y, z;
+		
+		//get position possible moves
+		moves = maze.getPossibleMoves(characterPosition);
+		for (int i=0;i < moves.length-1; i++)
+		{
+			//check if up is possible
+			if (moves[i] == "Up")
+				isPossible = true;
+		}
+		if (isPossible){
+			y = p.getY();
+			x = p.getX();
+			z = p.getZ()+1;
+			p.setY(y);
+			p.setX(x);
+			p.setZ(z);
+			moveCharacter(p);
+		}
 
 	}
 	
@@ -170,8 +281,28 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 	 * Moves the character to the floor beneath.
 	 */
 	public void moveDown() {
-		// TODO Auto-generated method stub
+		String[] moves;
+		boolean isPossible = false;
+		Position p = getCharacterPosition();
+		int x, y, z;
+		
+		//get position possible moves
+		moves = maze.getPossibleMoves(characterPosition);
+		for (int i=0;i < moves.length-1; i++)
+		{
+			//check if down is possible
+			if (moves[i] == "Down")
+				isPossible = true;
+		}
+		if (isPossible){
+			y = p.getY();
+			x = p.getX();
+			z = p.getZ()-1;
+			p.setY(y);
+			p.setX(x);
+			p.setZ(z);
+			moveCharacter(p);
+		}
 
 	}
-
 }
