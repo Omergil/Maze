@@ -23,6 +23,6 @@ public interface Model {
 	ArrayList<String> displaySolution (String maze);
 	void exit();
 	void saveMap();
-	void loadMap();
+	boolean loadMap();
 	void loadProperties(String filePath);
 }

@@ -1,10 +1,13 @@
 package model;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +26,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
+
+import org.eclipse.swt.widgets.List;
+
 import algorithms.demo.Maze3dSearchable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
@@ -45,6 +52,7 @@ public class Maze3dModel extends Observable implements Model {
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
 	Object[][] solArray;
+	
 
 	/**
 	 * Gets the number of threads.
@@ -390,7 +398,7 @@ public class Maze3dModel extends Observable implements Model {
 			return solutionStrings;
 		}
 		setChanged();
-		notifyObservers("Please perform the \"Solve Maze\" operation berfore using this feature.");
+		notifyObservers("Unable to complete operation.");
 		return null;
 	}
 
@@ -399,6 +407,7 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public void exit() {
+		//saveMap();
 		setChanged();
 		notifyObservers("Bye bye!");
 		exec.shutdown();
@@ -436,86 +445,114 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void saveMap()
 	{
-		//turn stores to one array
-		//create array of solution
-		HashMap<String, Solution> temp = solutionsStore;
-		HashMap<String,Maze3d> temp2 = mazeStore;
-		
-		//get solutions maze from solutionStore and put it to array
-		Collection<Solution> solutionmaze;
-		solutionmaze = temp.values();
-		Object[] tempsolarray = solutionmaze.toArray();
-		//get solutions maze name from solutionStore and put it to array
-		Collection<String> solutionmazenames;
-		solutionmazenames = temp.keySet();
-		Object[] tempsolnamearray = solutionmazenames.toArray();
-
-		//get maze3d object from mazeStore and put it to array
-		Collection<Maze3d> maze3dobject;
-		maze3dobject = temp2.values();
-		Object[] tempmaze3darray = maze3dobject.toArray();
-		//get maze3d name from mazeStore and put it to array
-		Collection<String> maze3dnames;
-		maze3dnames = temp2.keySet();
-		Object[] tempmaze3namedarray = maze3dnames.toArray();
-		
-		
-		//add solutions, names and maze3d object to array 
-		for (int i=0; i < tempsolnamearray.length; i++)
-		{
-			solArray[i][0] = tempsolnamearray[i];
-			solArray[i][1] = tempsolarray[i];
-			for(int j=0; j < tempmaze3namedarray.length;j++)
+		if((solutionsStore.isEmpty() == false) || (mazeStore.isEmpty() == false)){
+			//turn stores to one array
+			//create array of solution
+			HashMap<String, Solution> temp;
+			HashMap<String,Maze3d> temp2;
+			temp = solutionsStore;
+			temp2 = mazeStore;
+			
+			//get solutions maze from solutionStore and put it to array
+			Collection<Solution> solutionmaze;
+			solutionmaze = temp.values();
+			Object[] tempsolarray = solutionmaze.toArray();
+			//get solutions maze name from solutionStore and put it to array
+			Collection<String> solutionmazenames;
+			solutionmazenames = temp.keySet();
+			Object[] tempsolnamearray = solutionmazenames.toArray();
+	
+			//get maze3d object from mazeStore and put it to array
+			Collection<Maze3d> maze3dobject;
+			maze3dobject = temp2.values();
+			Object[] tempmaze3darray = maze3dobject.toArray();
+			//get maze3d name from mazeStore and put it to array
+			Collection<String> maze3dnames;
+			maze3dnames = temp2.keySet();
+			Object[] tempmaze3namedarray = maze3dnames.toArray();
+			
+			
+			//add solutions, names and maze3d object to array 
+			for (int i=0; i < tempsolnamearray.length; i++)
 			{
-				if (tempmaze3namedarray[j] == solArray[i][0])
+				solArray[i][0] = tempsolnamearray[i];
+				solArray[i][1] = tempsolarray[i];
+				for(int j=0; j < tempmaze3namedarray.length;j++)
 				{
-					solArray[i][2] = tempmaze3darray[j];
+					if (tempmaze3namedarray[j] == solArray[i][0])
+					{
+						solArray[i][2] = tempmaze3darray[j];
+					}
 				}
 			}
-		}
-		
-		//save the solution array
-		try {
-			ObjectOutputStream os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
-			os.writeObject(solArray);
-			os.flush();
-			os.close();
-		} catch (IOException e) {
-			setChanged();
-			notifyObservers("Cannot save map.");
 			
+			//save the solution array
+			try {
+				ObjectOutputStream os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
+				os.writeObject(solArray);
+				os.flush();
+				os.close();
+			} catch (IOException e) {
+				setChanged();
+				notifyObservers("Cannot save map.");
+				
+			}
 		}
+
 	}
 	
 	/** 
 	 * Open the map from zip file
-	 * @throws IOException 
 	 * 
 	 */
 	@Override
-	public void loadMap()
-	{
-		ObjectInputStream is = null;
+	public boolean loadMap()
+	{ 
+		File file = new File("zipfile.zip");
+		BufferedReader br;
 		try {
-			is = new ObjectInputStream(new GZIPInputStream(new FileInputStream("zipfile.zip")));
-			solArray = (Object[][])is.readObject();
-			is.close();
+			br = new BufferedReader(new FileReader("zipfile.zip"));
+			if(file.exists() && (br.readLine() == null)){
+				ObjectInputStream is = null;
+				try {
+						is = new ObjectInputStream(new GZIPInputStream(new FileInputStream("zipfile.zip")));
+						solArray = (Object[][])is.readObject();
+						is.close();
+						
+						//turn the Object[][] to hash map for solution store
+						HashMap<String, Solution> tempmap = new HashMap<String, Solution>();
+						for (int i=0; i<solArray[0].length; i++)
+						{
+							tempmap.put(solArray[i][0].toString(), (Solution)solArray[i][1]);
+						}
+						
+						solutionsStore = tempmap;
+						
+						//turn the Object[][] to hash map for maze store
+						HashMap<String, Maze3d> tempmap2 = new HashMap<String, Maze3d>();
+						for (int i=0; i<solArray[0].length; i++)
+						{
+							tempmap2.put(solArray[i][0].toString(), (Maze3d)solArray[i][2]);
+						}
+						
+						mazeStore = tempmap2;
+						return true;
+				} catch (IOException e) {
+					setChanged();
+					notifyObservers("Cannot load map.");
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
 		} catch (IOException e) {
 			setChanged();
 			notifyObservers("Cannot load map.");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		}
-		
-		//turn the Object[][] to hash map
-		HashMap<String, Solution> tempmap = new HashMap<String, Solution>();
-		for (int i=0; i<solArray[0].length; i++)
-		{
-			tempmap.put(solArray[i][0].toString(), (Solution)solArray[i][1]);
-		}
-		
-		solutionsStore = tempmap;
+		return true;
 	}
+
+		
+
 	
 	/**
 	 * Receives a path to an xml properties file and loads its content.

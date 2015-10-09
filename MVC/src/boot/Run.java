@@ -1,8 +1,10 @@
 package boot;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import model.Maze3dModel;
 import presenter.Presenter;
+import presenter.Presenter.SaveMap;
 import presenter.Properties;
 import view.CLI;
 import view.CLIObservableView;
@@ -18,6 +20,10 @@ public class Run {
 		properties.load();
 		Maze3dModel model = new Maze3dModel();
 		model.setNumOfThreads(properties.getNumOfThreads());
+		
+		//Check if the solution maze zip file exist
+		if(model.loadMap() == true)	
+			model.loadMap();
 		
 		if (properties.getView().equals("CLI"))
 		{

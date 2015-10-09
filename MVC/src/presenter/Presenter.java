@@ -40,8 +40,6 @@ public class Presenter implements Observer {
 		hashMap.put("file", new FileSize());
 		hashMap.put("solve", new Solve());
 		hashMap.put("exit", new Exit());
-		hashMap.put("savemap", new SaveMap());
-		hashMap.put("loadmap", new LoadMap());
 		hashMap.put("properties", new LoadProperties());
 	}
 
