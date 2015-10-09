@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +11,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
+
+import org.eclipse.swt.widgets.List;
+
 import algorithms.demo.Maze3dSearchable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
@@ -31,7 +35,6 @@ import algorithms.search.MazeAirDistance;
 import algorithms.search.MazeManhattanDistance;
 import algorithms.search.Solution;
 import algorithms.search.State;
-import boot.Run;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
 import presenter.Properties;
@@ -45,8 +48,10 @@ public class Maze3dModel extends Observable implements Model {
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
-
+	ArrayList<Object> solutionArray= new ArrayList<Object>();
+	ArrayList<Object> objectArray= new ArrayList<Object>();
 	
+
 	/**
 	 * Gets the number of threads.
 	 * @return int - number of threads.
@@ -437,7 +442,52 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void saveMap()
 	{
+		//create array of solution
+		HashMap<String, Solution> temp = solutionsStore;
+		HashMap<String,Maze3d> temp2 = mazeStore;
+		
+		//get solutions maze from solutionStore and put it to array
+		Collection<Solution> solutionmaze;
+		solutionmaze = temp.values();
+		Object[] tempsolarray = solutionmaze.toArray();
+		//get solutions maze name from solutionStore and put it to array
+		Collection<String> solutionmazenames;
+		solutionmazenames = temp.keySet();
+		Object[] tempsolnamearray = solutionmazenames.toArray();
+
+		//add solutions and names to array list
+		for (int i=0; i < tempsolnamearray.length; i++)
+		{
+			solutionArray.add(i,objectArray);
+			objectArray.add(0,tempsolnamearray[i]);
+			objectArray.add(1,tempsolarray[i]);
+		}
+
+		//get maze3d object from mazeStore and put it to array
+		Collection<Maze3d> maze3dobject;
+		maze3dobject = temp2.values();
+		Object[] tempmaze3darray = maze3dobject.toArray();
+		//get maze3d name from mazeStore and put it to array
+		Collection<String> maze3dnames;
+		maze3dnames = temp2.keySet();
+		Object[] tempmaze3namedarray = maze3dnames.toArray();
+		
+		
+		
+		//add maze3d and names to array list
+		for (int i=0; i < tempmaze3namedarray.length; i++)
+		{
+			if (solutionArray.contains(objectArray.contains(tempmaze3namedarray[i])))
+			{
+				for(int j=0; j < solutionArray.size(); i++){
+					
+				}
+				objectArray.add(2, tempmaze3darray[i]);
+			}
+		}
+		
 		String path = "c:/zipfile.zip";
+		
 		ObjectOutputStream os = null;
 		try {
 			os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream(path)));
@@ -447,6 +497,7 @@ public class Maze3dModel extends Observable implements Model {
 		} catch (IOException e) {
 			setChanged();
 			notifyObservers("Cannot save map.");
+			
 		}
 	}
 	
