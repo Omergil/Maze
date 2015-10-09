@@ -413,7 +413,6 @@ public class Maze3dModel extends Observable implements Model {
 		exec.shutdown();
 	}
 	
-	
 	/**
 	 * Compress object to bytes
 	 * @return compressed object
@@ -445,7 +444,7 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void saveMap()
 	{
-		if((solutionsStore.isEmpty() == false) || (mazeStore.isEmpty() == false)){
+		if((!solutionsStore.isEmpty()) || (!mazeStore.isEmpty())){
 			//turn stores to one array
 			//create array of solution
 			HashMap<String, Solution> temp;
