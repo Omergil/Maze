@@ -407,7 +407,7 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public void exit() {
-		//saveMap();
+		saveMap();
 		setChanged();
 		notifyObservers("Bye bye!");
 		exec.shutdown();
@@ -444,7 +444,11 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void saveMap()
 	{
-		if((!solutionsStore.isEmpty()) || (!mazeStore.isEmpty())){
+		boolean val1, val2;
+		val1 = solutionsStore.isEmpty();
+		val2 = mazeStore.isEmpty();
+		if(!(val1) && !(val2))
+		{
 			//turn stores to one array
 			//create array of solution
 			HashMap<String, Solution> temp;
@@ -470,7 +474,8 @@ public class Maze3dModel extends Observable implements Model {
 			maze3dnames = temp2.keySet();
 			Object[] tempmaze3namedarray = maze3dnames.toArray();
 			
-			
+			//solution array allocation
+			solArray = new Object[tempsolnamearray.length][3];
 			//add solutions, names and maze3d object to array 
 			for (int i=0; i < tempsolnamearray.length; i++)
 			{
@@ -478,23 +483,22 @@ public class Maze3dModel extends Observable implements Model {
 				solArray[i][1] = tempsolarray[i];
 				for(int j=0; j < tempmaze3namedarray.length;j++)
 				{
-					if (tempmaze3namedarray[j] == solArray[i][0])
-					{
+					if (solArray[i][0].equals(tempmaze3namedarray[j]))	
 						solArray[i][2] = tempmaze3darray[j];
-					}
 				}
 			}
 			
 			//save the solution array
-			try {
-				ObjectOutputStream os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
+			ObjectOutputStream os = null;
+			try { 
+				os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
 				os.writeObject(solArray);
 				os.flush();
 				os.close();
 			} catch (IOException e) {
-				setChanged();
-				notifyObservers("Cannot save map.");
-				
+				//setChanged();
+				//notifyObservers("Cannot save map.");
+				e.printStackTrace();
 			}
 		}
 
@@ -505,13 +509,13 @@ public class Maze3dModel extends Observable implements Model {
 	 * 
 	 */
 	@Override
-	public boolean loadMap()
+	public void loadMap()
 	{ 
-		File file = new File("zipfile.zip");
+		//File file = new File("zipfile.zip");
 		BufferedReader br;
 		try {
 			br = new BufferedReader(new FileReader("zipfile.zip"));
-			if(file.exists() && (br.readLine() == null)){
+			if((br.readLine() != null)){
 				ObjectInputStream is = null;
 				try {
 						is = new ObjectInputStream(new GZIPInputStream(new FileInputStream("zipfile.zip")));
@@ -519,23 +523,22 @@ public class Maze3dModel extends Observable implements Model {
 						is.close();
 						
 						//turn the Object[][] to hash map for solution store
-						HashMap<String, Solution> tempmap = new HashMap<String, Solution>();
+						HashMap<String, Solution> soltempmap = new HashMap<String, Solution>();
+						HashMap<String, Maze3d> mazetempmap = new HashMap<String, Maze3d>();
 						for (int i=0; i<solArray[0].length; i++)
 						{
-							tempmap.put(solArray[i][0].toString(), (Solution)solArray[i][1]);
+							soltempmap.put(solArray[i][0].toString(), (Solution)solArray[i][1]);
 						}
-						
-						solutionsStore = tempmap;
+						solutionsStore.putAll(soltempmap);
 						
 						//turn the Object[][] to hash map for maze store
-						HashMap<String, Maze3d> tempmap2 = new HashMap<String, Maze3d>();
 						for (int i=0; i<solArray[0].length; i++)
 						{
-							tempmap2.put(solArray[i][0].toString(), (Maze3d)solArray[i][2]);
+							mazetempmap.put(solArray[i][0].toString(), (Maze3d)solArray[i][2]);
 						}
 						
-						mazeStore = tempmap2;
-						return true;
+						mazeStore.putAll(mazetempmap);
+						
 				} catch (IOException e) {
 					setChanged();
 					notifyObservers("Cannot load map.");
@@ -547,7 +550,6 @@ public class Maze3dModel extends Observable implements Model {
 			setChanged();
 			notifyObservers("Cannot load map.");
 		}
-		return true;
 	}
 
 		

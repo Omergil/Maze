@@ -21,6 +21,10 @@ public class Run {
 		Maze3dModel model = new Maze3dModel();
 		model.setNumOfThreads(properties.getNumOfThreads());
 		
+		//Check if the solution maze zip file exist
+		model.loadMap();
+
+		
 		if (properties.getView().equals("CLI"))
 		{
 			CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
