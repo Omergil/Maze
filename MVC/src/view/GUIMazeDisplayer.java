@@ -36,7 +36,8 @@ public abstract class GUIMazeDisplayer extends Canvas {
 	public void setMaze(Maze3d maze)
 	{
 		this.maze = maze;
-		setCharacterPosition(this.maze.getStartPosition());
+		Position p = new Position(this.maze.getStartPosition().getX(), this.maze.getStartPosition().getY(), this.maze.getStartPosition().getZ());
+		setCharacterPosition(p);
 		hasWon = false;
 		displayedSolution = false;
 	}
