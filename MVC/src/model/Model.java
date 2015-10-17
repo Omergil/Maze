@@ -11,18 +11,6 @@ import algorithms.mazeGenerators.Maze3d;
  *
  */
 public interface Model {
-	String[] dir (String path);
-	void generate(String name, int width, int height, int floors);
-	Maze3d display(String name);
-	int[][] displayCrossSection(String coordinate, int index, String maze);
-	void saveMaze(String name, String filename);
-	void loadMaze (String filename, String name);
-	void mazeSize (String name);
-	void fileSize (String filename);
-	void solve (String maze, String algorithm);
-	ArrayList<String> displaySolution (String maze);
-	void exit();
-	void saveMap();
-	void loadMap();
-	void loadProperties(String filePath);
+	public void sendToServer(String userInput);
+	public void getFromServer();
 }

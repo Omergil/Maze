@@ -1,10 +1,16 @@
 package boot;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import model.Maze3dModel;
-import presenter.Presenter;
-import presenter.Presenter.SaveMap;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import model.ClientModel;
+import presenter.ClientPresenter;
 import presenter.Properties;
 import view.CLI;
 import view.CLIObservableView;
@@ -18,16 +24,15 @@ public class Run {
 		
 		Properties properties = new Properties("Properties.xml");
 		properties.load();
-		Maze3dModel model = new Maze3dModel();
-		model.setNumOfThreads(properties.getNumOfThreads());
+		ClientModel model = new ClientModel("localhost", 9999);
 		
-		//Check if the solution maze zip file exist
-		model.loadMap();
+		// Check if the solution maze zip file exist
+		//model.loadMap();
 
 		if (properties.getView().equals("CLI"))
 		{
 			CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
-			Presenter presenter = new Presenter(model, ui);
+			ClientPresenter presenter = new ClientPresenter(model, ui);
 			ui.addObserver(presenter);
 			model.addObserver(presenter);
 			ui.getCli().run();
@@ -35,7 +40,7 @@ public class Run {
 		else if (properties.getView().equals("GUI"))
 		{
 			GUIMainWindow gui = new GUIMainWindow(700, 600);
-			Presenter presenter = new Presenter(model, gui);
+			ClientPresenter presenter = new ClientPresenter(model, gui);
 			gui.addObserver(presenter);
 			model.addObserver(presenter);
 			gui.run();			
