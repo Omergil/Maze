@@ -1,8 +1,10 @@
 package view;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Observable;
@@ -11,14 +13,14 @@ public class MazeClientHandler extends Observable implements ClientHandler {
 
 	String userInput;
 	BufferedReader in;
-	PrintWriter out;
+	ObjectOutputStream out;
 	
 	
 	@Override
 	public void handleClient(InputStream inFromClient, OutputStream outToClient) {
 		try {
 			in = new BufferedReader(new InputStreamReader(inFromClient));
-			out = new PrintWriter(outToClient,true);
+			out = new ObjectOutputStream(outToClient);
 			String line;
 			
 			while(!(line = in.readLine()).endsWith("exit"))
@@ -34,7 +36,11 @@ public class MazeClientHandler extends Observable implements ClientHandler {
 
 	@Override
 	public void displayData(Object data) {
-		out.println(data);
+		try {
+			out.writeObject(data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -311,7 +311,12 @@ public class GUIMainWindow extends BasicWindow implements View {
 			Maze3d maze = (Maze3d) data;
 			maze3dDisplay.setMaze(maze);
 			maze3dDisplay.setMazeName(tempMazeName);
-			maze3dDisplay.redraw();
+			display.syncExec(new Runnable() {
+				@Override
+				public void run() {
+					maze3dDisplay.redraw();
+				}
+			});
 		}
 		else if (data instanceof String)
 		{

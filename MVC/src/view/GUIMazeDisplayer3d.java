@@ -410,6 +410,10 @@ public class GUIMazeDisplayer3d extends GUIMazeDisplayer {
 			tempPosition.setZ((Integer.parseInt(coordinates.get(2))));
 			solution.add(tempPosition);
 		}
-		redraw();
+		getDisplay().syncExec(new Runnable() {
+			public void run() {
+				redraw();				
+			}
+		});
 	}
 }

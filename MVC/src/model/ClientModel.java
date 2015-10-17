@@ -3,6 +3,7 @@ package model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -19,7 +20,7 @@ import algorithms.search.Solution;
 public class ClientModel extends Observable implements Model {
 
 	PrintWriter outToServer;
-	BufferedReader inFromServer;
+	ObjectInputStream inFromServer;
 	Socket theServer;
 	
 	int numOfThreads = 20;
@@ -33,7 +34,7 @@ public class ClientModel extends Observable implements Model {
 			theServer = new Socket(host, port);
 			System.out.println("Connected to server!");
 			outToServer = new PrintWriter(theServer.getOutputStream());
-			inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+			inFromServer = new ObjectInputStream(theServer.getInputStream());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -55,12 +56,15 @@ public class ClientModel extends Observable implements Model {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					String line;
-					
-					while(!(line = inFromServer.readLine()).endsWith("Bye bye!"))
-					{
-						setChanged();
-						notifyObservers(line);
+					try {
+						Object object;
+						while (!((object = inFromServer.readObject()) instanceof String && (object.equals("Bye bye!"))))
+						{
+							setChanged();
+							notifyObservers(object);							
+						}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
 					}
 					inFromServer.close();
 				} catch (IOException e) {
