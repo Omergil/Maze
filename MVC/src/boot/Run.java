@@ -24,14 +24,13 @@ public class Run {
 		//Check if the solution maze zip file exist
 		model.loadMap();
 
-		
 		if (properties.getView().equals("CLI"))
 		{
 			CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
 			Presenter presenter = new Presenter(model, ui);
 			ui.addObserver(presenter);
 			model.addObserver(presenter);
-			ui.getCli().run();			
+			ui.getCli().run();
 		}
 		else if (properties.getView().equals("GUI"))
 		{

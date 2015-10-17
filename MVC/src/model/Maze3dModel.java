@@ -451,10 +451,10 @@ public class Maze3dModel extends Observable implements Model {
 		{
 			//turn stores to one array
 			//create array of solution
-			HashMap<String, Solution> temp;
-			HashMap<String,Maze3d> temp2;
-			temp = solutionsStore;
-			temp2 = mazeStore;
+			HashMap<String, Solution> temp = new HashMap<String,Solution>();
+			HashMap<String,Maze3d> temp2 = new HashMap<String,Maze3d>();
+			temp.putAll(solutionsStore);
+			temp2.putAll(mazeStore);
 			
 			//get solutions maze from solutionStore and put it to array
 			Collection<Solution> solutionmaze;
@@ -464,7 +464,7 @@ public class Maze3dModel extends Observable implements Model {
 			Collection<String> solutionmazenames;
 			solutionmazenames = temp.keySet();
 			Object[] tempsolnamearray = solutionmazenames.toArray();
-	
+
 			//get maze3d object from mazeStore and put it to array
 			Collection<Maze3d> maze3dobject;
 			maze3dobject = temp2.values();
@@ -540,6 +540,7 @@ public class Maze3dModel extends Observable implements Model {
 						mazeStore.putAll(mazetempmap);
 						
 				} catch (IOException e) {
+					e.printStackTrace();
 					setChanged();
 					notifyObservers("Cannot load map.");
 				} catch (ClassNotFoundException e) {
