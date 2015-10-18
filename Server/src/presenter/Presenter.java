@@ -305,6 +305,9 @@ public class Presenter implements Observer {
 		}
 	}
 	
+	/**
+	 * Loads the server's properties from the XML file.
+	 */
 	public class LoadProperties implements Command{
 
 		@Override

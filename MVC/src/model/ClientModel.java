@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.search.Solution;
+import presenter.ClientProperties;
 
 /**
  * Model object for MVP architecture, specifically for Maze3d.
@@ -74,5 +75,24 @@ public class ClientModel extends Observable implements Model {
 				notifyObservers(123);				
 			}
 		}).start();
+	}
+	
+	/**
+	 * Receives a path to an xml properties file and loads its content.
+	 */
+	@Override
+	public void loadProperties(String filePath) {
+		ClientProperties properties = new ClientProperties(filePath);
+		properties.load();
+		if (properties.isPropertiesSet())
+		{
+			setChanged();
+			notifyObservers(properties);
+		}
+		else
+		{
+			setChanged();
+			notifyObservers("Properties file is corrupted / doesn't exist.");
+		}
 	}
 }

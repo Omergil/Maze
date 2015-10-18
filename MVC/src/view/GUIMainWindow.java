@@ -3,7 +3,6 @@ package view;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -13,7 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import algorithms.mazeGenerators.Maze3d;
-import presenter.Properties;
+import presenter.ClientProperties;
 
 /**
  * Main window to present the game.
@@ -49,7 +48,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 	void initWidgets() {
 		
 		shell.setLayout(new GridLayout(2, false));
-		setUserInput("properties Properties.xml");
+		setUserInput("properties ClientProperties.xml");
 		
 		Button generateMaze  = new Button(shell, SWT.PUSH);
 		generateMaze.setText("Generate Maze");
@@ -327,9 +326,9 @@ public class GUIMainWindow extends BasicWindow implements View {
 				}
 			});
 		}
-		else if (data instanceof Properties)
+		else if (data instanceof ClientProperties)
 		{
-			Properties properties = (Properties) data;
+			ClientProperties properties = (ClientProperties) data;
 			if (properties.isPropertiesSet())
 			{
 				defaultMazeSolvingAlgorithm = properties.getMazeSolvingAlgorithm().toLowerCase();	

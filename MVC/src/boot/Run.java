@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 
 import model.ClientModel;
 import presenter.ClientPresenter;
-import presenter.Properties;
+import presenter.ClientProperties;
 import view.CLI;
 import view.CLIObservableView;
 import view.GUIMainWindow;
@@ -22,14 +22,14 @@ import view.GUIMainWindow;
 public class Run {
 	public static void main(String[] args) throws FileNotFoundException {
 		
-		Properties properties = new Properties("Properties.xml");
-		properties.load();
+		ClientProperties clientProperties = new ClientProperties("ClientProperties.xml");
+		clientProperties.load();
 		ClientModel model = new ClientModel("localhost", 9999);
 		
 		// Check if the solution maze zip file exist
 		//model.loadMap();
 
-		if (properties.getView().equals("CLI"))
+		if (clientProperties.getView().equals("CLI"))
 		{
 			CLIObservableView ui = new CLIObservableView(new CLI(System.in, System.out));
 			ClientPresenter presenter = new ClientPresenter(model, ui);
@@ -37,7 +37,7 @@ public class Run {
 			model.addObserver(presenter);
 			ui.getCli().run();
 		}
-		else if (properties.getView().equals("GUI"))
+		else if (clientProperties.getView().equals("GUI"))
 		{
 			GUIMainWindow gui = new GUIMainWindow(700, 600);
 			ClientPresenter presenter = new ClientPresenter(model, gui);

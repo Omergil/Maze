@@ -1,5 +1,8 @@
 package presenter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import model.Model;
@@ -9,6 +12,8 @@ public class ClientPresenter implements Observer {
 
 	Model model;
 	View ui;
+	ArrayList<String> arguments;
+	HashMap<String, Command> hashMap = new HashMap<String, Command>();
 
 	/**
 	 * Constructor for presenter layer in MVP.
@@ -18,6 +23,11 @@ public class ClientPresenter implements Observer {
 	public ClientPresenter(Model model, View ui) {
 		this.model = model;
 		this.ui = ui;
+		setHashMap();
+	}
+
+	public void setHashMap() {
+		hashMap.put("properties", new LoadClientProperties());
 	}
 
 	/**
@@ -30,7 +40,16 @@ public class ClientPresenter implements Observer {
 	public void update(Observable observable, Object arg1) {
 		if (observable == ui)
 		{
-			model.sendToServer(ui.getUserCommand());
+			String input = ui.getUserCommand();
+			arguments = splitArguments(input);
+			if (hashMap.containsKey(arguments.get(0)))
+			{
+				hashMap.get(arguments.get(0)).doCommand();
+			}
+			else
+			{
+				model.sendToServer(ui.getUserCommand());
+			}
 		}
 		
 		else if (observable == model)
@@ -38,5 +57,40 @@ public class ClientPresenter implements Observer {
 			
 			ui.displayData(arg1);
 		}
-	}	
+	}
+	
+	/**
+	 * Loads the client's properties from the XML file.
+	 */
+	public class LoadClientProperties implements Command{
+		@Override
+		public void doCommand() {
+			if (arguments.size() >= 2)
+			{
+				String filePath = arguments.get(1);
+				for (int i = 2; i < arguments.size(); i++)
+				{
+					filePath = filePath + " " + arguments.get(i);
+				}
+				model.loadProperties(filePath);				
+			}
+			else
+			{
+				ui.displayData("Error for loading client properties.");
+			}
+		}
+	}
+	
+	/**
+	 * Split arguments for a command given by the client.<br>
+	 * The arguments are returned in array list of Strings.
+	 * @param userInput
+	 * @return ArrayList<String> containing the command arguments.
+	 */
+	private ArrayList<String> splitArguments(String userInput)
+	{
+		ArrayList<String> arguments = new ArrayList<String>();
+		arguments = new ArrayList<String>(Arrays.asList(userInput.split("\\s+")));
+		return arguments;
+	}
 }

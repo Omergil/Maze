@@ -14,11 +14,10 @@ import java.io.Serializable;
  * <p>
  * The purpose of the class is to save the program's properties in an XML file, and load it when it starts.
  */
-public class Properties implements Serializable {
+public class ClientProperties implements Serializable {
 	
 	String filePath;
 	boolean propertiesSet = false;
-	int numOfThreads;
 	String mazeSolvingAlgorithm;
 	String mazeName;
 	int mazeWidth;
@@ -115,22 +114,6 @@ public class Properties implements Serializable {
 	}
 
 	/**
-	 * Gets the program's number of maximum threads property.
-	 * @return Integer - program's number of maximum threads.
-	 */
-	public int getNumOfThreads() {
-		return numOfThreads;
-	}
-
-	/**
-	 * Sets the program's number of threads property.
-	 * @param numOfThreads
-	 */
-	public void setNumOfThreads(int numOfThreads) {
-		this.numOfThreads = numOfThreads;
-	}
-
-	/**
 	 * Gets the program's solution algorithm property.
 	 * @return String - program's maze solution.
 	 */
@@ -165,7 +148,7 @@ public class Properties implements Serializable {
 	/**
 	 * Default constructor.
 	 */
-	public Properties(String filePath) {
+	public ClientProperties(String filePath) {
 		this.filePath = filePath;
 	}
 	
@@ -179,14 +162,12 @@ public class Properties implements Serializable {
 		XMLEncoder e;
 		try {
 			e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)));
-			numOfThreads = 20;
 			mazeSolvingAlgorithm = "bfs";
 			mazeName = "mymaze";
 			mazeWidth = 10;
 			mazeHeight = 8;
 			mazeFloors = 3;
 			view = "GUI";
-			e.writeObject(numOfThreads);
 			e.writeObject(mazeSolvingAlgorithm);
 			e.writeObject(mazeName);
 			e.writeObject(mazeWidth);
@@ -213,7 +194,6 @@ public class Properties implements Serializable {
 		try {
 			d = new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)));
 			try {
-				this.numOfThreads = (int)d.readObject();
 				this.mazeSolvingAlgorithm = (String)d.readObject();
 				this.mazeName = (String)d.readObject();
 				this.mazeWidth = (int)d.readObject();
