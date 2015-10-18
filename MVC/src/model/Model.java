@@ -14,4 +14,5 @@ public interface Model {
 	public void sendToServer(String userInput);
 	public void getFromServer();
 	public void loadProperties(String filePath);
+	public void exit();
 }

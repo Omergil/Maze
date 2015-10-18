@@ -28,6 +28,7 @@ public class ClientPresenter implements Observer {
 
 	public void setHashMap() {
 		hashMap.put("properties", new LoadClientProperties());
+		hashMap.put("exit", new Exit());
 	}
 
 	/**
@@ -93,4 +94,26 @@ public class ClientPresenter implements Observer {
 		arguments = new ArrayList<String>(Arrays.asList(userInput.split("\\s+")));
 		return arguments;
 	}
+	
+	/**
+	 * Exit from client session.
+	 */
+	public class Exit implements Command{
+		@Override
+		public void doCommand() {
+			if (arguments.size() == 1)
+			{
+				model.exit();			
+			}
+			else
+			{
+				ui.displayData("Cant exit");
+			}
+		}
+	}
+	
+	
+	
+	
+	
 }

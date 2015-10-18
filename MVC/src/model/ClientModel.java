@@ -95,4 +95,24 @@ public class ClientModel extends Observable implements Model {
 			notifyObservers("Properties file is corrupted / doesn't exist.");
 		}
 	}
+
+	/**
+	 * Terminate the client session
+	 */
+	
+	@Override
+	public void exit() {
+
+		try {
+			inFromServer.close();
+			outToServer.println("exit");
+			outToServer.flush();
+			outToServer.close();
+			theServer.close();
+		} catch (IOException e) {
+			e.printStackTrace();}
+		exec.shutdown();
+	}
+	
+	
 }
