@@ -58,10 +58,10 @@ public class ClientModel extends Observable implements Model {
 				try {
 					try {
 						Object object;
-						while (!((object = inFromServer.readObject()) instanceof String && (object.equals("Bye bye!"))))
+						while (!((object = inFromServer.readObject()) instanceof String && (object.equals("Bye bye!"))))//DELETE
 						{
 							setChanged();
-							notifyObservers(object);							
+							notifyObservers(object);
 						}
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();

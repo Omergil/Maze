@@ -35,6 +35,7 @@ public class ClientPresenter implements Observer {
 		
 		else if (observable == model)
 		{
+			
 			ui.displayData(arg1);
 		}
 	}	
