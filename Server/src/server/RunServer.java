@@ -6,14 +6,24 @@ import java.io.InputStreamReader;
 
 import model.Maze3dModel;
 import presenter.Presenter;
+import presenter.ServerProperties;
 import view.MazeClientHandler;
 
 public class RunServer {
-
+	
 	public static void main(String[] args) {
+		Maze3dModel model;
 		System.out.println("Server side.");
 		System.out.println("type \"close server\" to shut it down.");
-		Maze3dModel model = new Maze3dModel();
+		ServerProperties serverProperties = new ServerProperties("ServerProperties.xml");
+		serverProperties.load();
+		try {
+			model = new Maze3dModel(serverProperties.getNumOfThreads());			
+		} catch (Exception e) {
+			model = new Maze3dModel();
+		}
+		// Load the mazes from zip file
+		model.loadMap();
 		MazeClientHandler view = new MazeClientHandler();
 		Presenter presenter = new Presenter(model, view);
 		model.addObserver(presenter);

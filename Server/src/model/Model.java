@@ -21,7 +21,6 @@ public interface Model {
 	void fileSize (String filename);
 	void solve (String maze, String algorithm);
 	ArrayList<String> displaySolution (String maze);
-	void exit();
 	void saveMap();
 	void loadMap();
 	void loadProperties(String filePath);

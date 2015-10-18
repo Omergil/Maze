@@ -40,8 +40,8 @@ public class Presenter implements Observer {
 		hashMap.put("load", new LoadMaze());
 		hashMap.put("file", new FileSize());
 		hashMap.put("solve", new Solve());
-		hashMap.put("exit", new Exit());
 		hashMap.put("properties", new LoadProperties());
+		hashMap.put("savemap", new SaveMap());
 	}
 
 	/**
@@ -329,42 +329,24 @@ public class Presenter implements Observer {
 	}
 	
 	/**
-	 * Runs the Exit operation in the model layer.
+	 * Runs the Save Map operation in the model layer.
 	 */
-	public class Exit implements Command{
-
-		@Override
-		public void doCommand() {
-			if(arguments.size() == 1)
-				model.exit();
-			else
-				wrongInput();
-		}
-	}
-	
-	
-	/////////////////////ONLY FOR CHECK//////////////////////////////
-	
 	public class SaveMap implements Command{
 
 		@Override
 		public void doCommand() {
 			model.saveMap();
-			
 		}
 	}
 	
+	/**
+	 * Runs the Load Map operation in the model layer.
+	 */
 	public class LoadMap implements Command{
 
 		@Override
 		public void doCommand() {
 			model.loadMap();
 		}
-	}
-	
-	///////end of check///////////////////////////////////////////////
-	
-	
-	
-	
+	}	
 }

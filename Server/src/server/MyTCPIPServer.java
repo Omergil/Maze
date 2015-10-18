@@ -18,7 +18,7 @@ public class MyTCPIPServer {
 	ClientHandler clientHandler;
 	int numOfClients;
 	ExecutorService threadPool;
-	volatile boolean stop;//FALSE??
+	volatile boolean stop;
 	Thread mainServerThread;
 	int clientsHandled = 0;
 	
@@ -33,7 +33,7 @@ public class MyTCPIPServer {
 	{
 		try {
 			server = new ServerSocket(port);
-			server.setSoTimeout(30*1000);
+			server.setSoTimeout(15*1000);
 			threadPool = Executors.newFixedThreadPool(numOfClients);
 		} catch (IOException e) {
 			e.printStackTrace();

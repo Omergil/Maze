@@ -35,37 +35,42 @@ import algorithms.search.Solution;
 import algorithms.search.State;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
-import presenter.Properties;
+import presenter.ServerProperties;
 
 /**
  * Model object for MVP architecture, specifically for Maze3d.
  */
 public class Maze3dModel extends Observable implements Model {
 
-	int numOfThreads = 20;
+	private static final int NUMOFTHREADS = 20;
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
-	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
 	Object[][] solArray;
+	ExecutorService exec;
 	
-
 	/**
-	 * Gets the number of threads.
-	 * @return int - number of threads.
+	 * Default Constructor.
+	 * <p>
+	 * Sets the model with the default number of threads.
 	 */
-	public int getNumOfThreads() {
-		return numOfThreads;
+	public Maze3dModel() {
+		exec = Executors.newFixedThreadPool(NUMOFTHREADS);
 	}
-
+	
 	/**
-	 * Sets the number of threads.
-	 * @param numOfThreads
+	 * Default Constructor.
+	 * <p>
+	 * Sets the model with number of threads set by the administrator.
 	 */
-	public void setNumOfThreads(int threads) {
+	public Maze3dModel(int numOfThreads) {
 		if (numOfThreads > 3)
 		{
-			this.numOfThreads = threads;			
+			exec = Executors.newFixedThreadPool(numOfThreads);
 		}
+		else
+		{
+			exec = Executors.newFixedThreadPool(NUMOFTHREADS);			
+		}		
 	}
 
 	/**
@@ -396,17 +401,6 @@ public class Maze3dModel extends Observable implements Model {
 		notifyObservers("Unable to complete operation.");
 		return null;
 	}
-
-	/**
-	 * Exits the program.
-	 */
-	@Override
-	public void exit() {
-		saveMap();
-		setChanged();
-		notifyObservers("Bye bye!");
-		exec.shutdown();
-	}
 	
 	/**
 	 * Compress object to bytes
@@ -548,15 +542,12 @@ public class Maze3dModel extends Observable implements Model {
 		}
 	}
 
-		
-
-	
 	/**
 	 * Receives a path to an xml properties file and loads its content.
 	 */
 	@Override
 	public void loadProperties(String filePath) {
-		Properties properties = new Properties(filePath);
+		ServerProperties properties = new ServerProperties(filePath);
 		properties.load();
 		if (properties.isPropertiesSet())
 		{

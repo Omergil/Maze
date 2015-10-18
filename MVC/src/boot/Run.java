@@ -25,9 +25,6 @@ public class Run {
 		ClientProperties clientProperties = new ClientProperties("ClientProperties.xml");
 		clientProperties.load();
 		ClientModel model = new ClientModel("localhost", 9999);
-		
-		// Check if the solution maze zip file exist
-		//model.loadMap();
 
 		if (clientProperties.getView().equals("CLI"))
 		{

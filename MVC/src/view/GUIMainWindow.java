@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,6 +13,9 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+
 import algorithms.mazeGenerators.Maze3d;
 import presenter.ClientProperties;
 
@@ -50,6 +55,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 		shell.setLayout(new GridLayout(2, false));
 		setUserInput("properties ClientProperties.xml");
 		
+		// Generate maze
 		Button generateMaze  = new Button(shell, SWT.PUSH);
 		generateMaze.setText("Generate Maze");
 		generateMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -73,7 +79,8 @@ public class GUIMainWindow extends BasicWindow implements View {
 
 		maze3dDisplay = new GUIMazeDisplayer3d(shell, SWT.BORDER);
 		maze3dDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 11));
-		
+
+		// Display Maze button
 		Button displayMaze = new Button(shell, SWT.PUSH);
 		displayMaze.setText("Display a maze");
 		displayMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -94,7 +101,8 @@ public class GUIMainWindow extends BasicWindow implements View {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-		
+
+		// Save Maze button
 		Button saveMaze = new Button(shell, SWT.PUSH);
 		saveMaze.setText("Save Maze");
 		saveMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -115,6 +123,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 
+		// Load Maze button
 		Button loadMaze = new Button(shell, SWT.PUSH);
 		loadMaze.setText("Load Maze");
 		loadMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -135,6 +144,8 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 
+
+		// Maze size button
 		Button mazeSize = new Button(shell, SWT.PUSH);
 		mazeSize.setText("Maze Size");
 		mazeSize.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -155,6 +166,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 
+		// File Size button 
 		Button fileSize = new Button(shell, SWT.PUSH);
 		fileSize.setText("File Size");
 		fileSize.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -174,7 +186,8 @@ public class GUIMainWindow extends BasicWindow implements View {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-		
+
+		// Solve Maze button
 		Button solveMaze = new Button(shell, SWT.PUSH);
 		solveMaze.setText("Solve Maze");
 		solveMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -195,6 +208,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 
+		// Display Hing button
 		Button displayHint = new Button(shell, SWT.PUSH);
 		displayHint.setText("Get a Hint!");
 		displayHint.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -213,7 +227,8 @@ public class GUIMainWindow extends BasicWindow implements View {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-		
+
+		// Display Solution button
 		Button displaySolution = new Button(shell, SWT.PUSH);
 		displaySolution.setText("Display Solution");
 		displaySolution.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -233,6 +248,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 
+		// Load Properties button
 		Button loadProperties = new Button(shell, SWT.PUSH);
 		loadProperties.setText("Load Properties");
 		loadProperties.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -252,7 +268,8 @@ public class GUIMainWindow extends BasicWindow implements View {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-		
+
+		// Exit button
 		Button exit = new Button(shell, SWT.PUSH);
 		exit.setText("Exit");
 		exit.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
@@ -269,7 +286,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			}
 		});
 		
-		//move the character on the board
+		// Move the character on the board
 		maze3dDisplay.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e)
 			{
@@ -295,6 +312,15 @@ public class GUIMainWindow extends BasicWindow implements View {
 					}
 				}
 				
+			}
+		});
+		
+		// Dispose listener for closing the window
+		shell.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				setUserInput("exit");
+				shell.dispose();
 			}
 		});
 	}

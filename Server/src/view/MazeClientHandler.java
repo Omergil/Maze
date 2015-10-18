@@ -15,7 +15,6 @@ public class MazeClientHandler extends Observable implements ClientHandler {
 	BufferedReader in;
 	ObjectOutputStream out;
 	
-	
 	@Override
 	public void handleClient(InputStream inFromClient, OutputStream outToClient) {
 		try {
@@ -27,6 +26,8 @@ public class MazeClientHandler extends Observable implements ClientHandler {
 			{
 				setUserInput(line);
 			}
+			// Save all mazes to a file
+			setUserInput("savemap");
 			in.close();
 			out.close();
 		} catch (Exception e) {
