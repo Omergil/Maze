@@ -90,7 +90,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    // Display the X box
 	    final Text xText = new Text(shell, SWT.BORDER);
 	    xText.setText(defaultX);
-	    xText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
+	    xText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));
 	    xText.addListener(SWT.Verify, new Listener()
 	    {
 			@Override
@@ -108,7 +108,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    // Display the Y box
 	    final Text yText = new Text(shell, SWT.BORDER);
 	    yText.setText(defaultY);
-	    yText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
+	    yText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));
 	    yText.addListener(SWT.Verify, new Listener()
 	    {
 	    	@Override
@@ -126,7 +126,7 @@ public class GUIGenerateMazeDialog extends GUISubMenu {
 	    // Display the floors box
 	    final Text floorsText = new Text(shell, SWT.BORDER);
 	    floorsText.setText(defaultFloors);
-	    floorsText.setLayoutData(new GridData(SWT.NONE, SWT.NONE, true, true, 2, 1));
+	    floorsText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 2, 1));
 	    floorsText.addListener(SWT.Verify, new Listener() {
 			
 			@Override
