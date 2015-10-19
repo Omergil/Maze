@@ -39,6 +39,7 @@ public class RunServer {
 			e.printStackTrace();
 		}
 		model.closeThreadPool();
+		model.saveMap();
 		server.close();	
 	}
 }

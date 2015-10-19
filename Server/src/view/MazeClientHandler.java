@@ -26,8 +26,6 @@ public class MazeClientHandler extends Observable implements ClientHandler {
 			{
 				setUserInput(line);
 			}
-			// Save all mazes to a file
-			setUserInput("savemap");
 			in.close();
 			out.close();
 		} catch (Exception e) {
