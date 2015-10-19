@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -561,5 +562,17 @@ public class Maze3dModel extends Observable implements Model {
 		}
 	}
 	
-	
+	/**
+	 * Closes all threads in the model layer.
+	 */
+	@Override
+	public void closeThreadPool() {
+		exec.shutdown();
+		try {
+			boolean allTasksCompleted=false;
+			while(!(allTasksCompleted=exec.awaitTermination(10, TimeUnit.SECONDS)));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

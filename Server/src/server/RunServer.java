@@ -38,7 +38,7 @@ public class RunServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		model.closeThreadPool();
 		server.close();	
 	}
 

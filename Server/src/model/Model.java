@@ -24,4 +24,5 @@ public interface Model {
 	void saveMap();
 	void loadMap();
 	void loadProperties(String filePath);
+	void closeThreadPool();
 }

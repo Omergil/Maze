@@ -40,6 +40,7 @@ public abstract class GUIMazeDisplayer extends Canvas {
 		setCharacterPosition(p);
 		hasWon = false;
 		displayedSolution = false;
+		displayedHint = false;
 	}
 	
 	/**

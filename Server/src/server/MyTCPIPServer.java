@@ -7,9 +7,6 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import javax.xml.ws.handler.soap.SOAPMessageContext;
-
 import view.ClientHandler;
 
 public class MyTCPIPServer {
@@ -80,13 +77,13 @@ public class MyTCPIPServer {
 	{
 		stop = true;
 		// do not execute jobs in queue, continue to execute running threads
-		System.out.println("shutting down");
+		System.out.println("Shutting down");
 		threadPool.shutdown();
 		// wait 10 seconds over and over again until all running jobs have finished
 		boolean allTasksCompleted=false;
 		try {
+			System.out.println("Waiting for active clients to shut down...");
 			while(!(allTasksCompleted=threadPool.awaitTermination(10, TimeUnit.SECONDS)));
-			
 			System.out.println("All the tasks have finished.");
 
 			mainServerThread.join();
