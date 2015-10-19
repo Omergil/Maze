@@ -107,7 +107,7 @@ public class ClientPresenter implements Observer {
 			}
 			else
 			{
-				ui.displayData("Cant exit");
+				ui.displayData("Error occured for exit.");
 			}
 		}
 	}

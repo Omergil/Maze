@@ -51,10 +51,11 @@ public class MyTCPIPServer {
 								public void run() {
 									try {
 										clientsHandled++;
-										System.out.println("Handling client " + clientsHandled);
+										int numOfClient = clientsHandled;
+										System.out.println("Handling client " + numOfClient);
 										clientHandler.handleClient(someClient.getInputStream(), someClient.getOutputStream());
 										someClient.close();
-										System.out.println("Done handling client " + clientsHandled);
+										System.out.println("Done handling client " + numOfClient);
 									} catch (Exception e) {
 										e.printStackTrace();
 									}

@@ -1,14 +1,6 @@
 package boot;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 import model.ClientModel;
 import presenter.ClientPresenter;
 import presenter.ClientProperties;
@@ -42,6 +34,5 @@ public class Run {
 			model.addObserver(presenter);
 			gui.run();			
 		}
-		
 	}
 }

@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <java version="1.8.0_51" class="java.beans.XMLDecoder">
  <string>bfs</string>
- <string>mymaze2</string>
-=======
-<java version="1.8.0_60" class="java.beans.XMLDecoder">
- <string>bfs</string>
  <string>mymaze</string>
->>>>>>> refs/remotes/master/master
  <int>10</int>
  <int>8</int>
  <int>3</int>

@@ -339,7 +339,7 @@ public class GUIMainWindow extends BasicWindow implements View {
 			display.syncExec(new Runnable() {
 				@Override
 				public void run() {
-					maze3dDisplay.redraw();//
+					maze3dDisplay.redraw();
 				}
 			});
 		}

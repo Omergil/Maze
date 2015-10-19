@@ -560,4 +560,6 @@ public class Maze3dModel extends Observable implements Model {
 			notifyObservers("Properties file is corrupted / doesn't exist.");
 		}
 	}
+	
+	
 }

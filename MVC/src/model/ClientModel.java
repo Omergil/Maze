@@ -1,18 +1,13 @@
 package model;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import algorithms.mazeGenerators.Maze3d;
-import algorithms.search.Solution;
 import presenter.ClientProperties;
 
 /**
@@ -23,12 +18,12 @@ public class ClientModel extends Observable implements Model {
 	PrintWriter outToServer;
 	ObjectInputStream inFromServer;
 	Socket theServer;
+	boolean alreadyClosed = false;
+	boolean socketClosed = false;
 	
+	// DELETE THREADS???
 	int numOfThreads = 20;
-	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
-	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
-	Object[][] solArray;
 
 	public ClientModel(String host, int port) {
 		try {
@@ -37,12 +32,13 @@ public class ClientModel extends Observable implements Model {
 			outToServer = new PrintWriter(theServer.getOutputStream());
 			inFromServer = new ObjectInputStream(theServer.getInputStream());
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			System.out.println("Error connecting to server.");
+			return;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error connecting to server.");
+			return;
 		}
 		
-		//DELETE???
 		getFromServer();
 	}
 
@@ -57,28 +53,30 @@ public class ClientModel extends Observable implements Model {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					try {
 						Object object;
-						while (!((object = inFromServer.readObject()) instanceof String && (object.equals("Bye bye!"))))//DELETE
+						while (!socketClosed)
 						{
-							setChanged();
-							notifyObservers(object);
+							try {
+								object = inFromServer.readObject();
+								setChanged();
+								notifyObservers(object);
+							} catch (ClassNotFoundException e) {
+								continue;
+							};
 						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-					inFromServer.close();
 				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				setChanged();
-				notifyObservers(123);				
+					if (!socketClosed)
+					{
+						setChanged();
+						notifyObservers("Error with connection to the server.");
+					}	
+				}	
 			}
 		}).start();
 	}
 	
 	/**
-	 * Receives a path to an xml properties file and loads its content.
+	 * Receives a path to an XML properties file and loads its content.
 	 */
 	@Override
 	public void loadProperties(String filePath) {
@@ -104,14 +102,21 @@ public class ClientModel extends Observable implements Model {
 	public void exit() {
 
 		try {
-			inFromServer.close();
-			outToServer.println("exit");
-			outToServer.flush();
-			outToServer.close();
-			theServer.close();
+			if (!alreadyClosed)
+			{
+				socketClosed = true;
+				alreadyClosed = true;
+				setChanged();
+				notifyObservers("Bye bye!");
+				//inFromServer.close();
+				outToServer.println("exit");
+				outToServer.flush();
+				outToServer.close();
+				theServer.close();
+				exec.shutdown();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();}
-		exec.shutdown();
 	}
 	
 	
