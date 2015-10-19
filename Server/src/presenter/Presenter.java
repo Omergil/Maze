@@ -40,7 +40,6 @@ public class Presenter implements Observer {
 		hashMap.put("load", new LoadMaze());
 		hashMap.put("file", new FileSize());
 		hashMap.put("solve", new Solve());
-		hashMap.put("properties", new LoadProperties());
 		hashMap.put("savemap", new SaveMap());
 	}
 
@@ -297,29 +296,6 @@ public class Presenter implements Observer {
 					(arguments.get(2).toLowerCase().equals("manhattan")) || (arguments.get(2).toLowerCase().equals("air"))))
 			{
 				model.solve(arguments.get(1), arguments.get(2));		
-			}
-			else
-			{
-				wrongInput();
-			}
-		}
-	}
-	
-	/**
-	 * Loads the server's properties from the XML file.
-	 */
-	public class LoadProperties implements Command{
-
-		@Override
-		public void doCommand() {
-			if (arguments.size() >= 2)
-			{
-				String filePath = arguments.get(1);
-				for (int i = 2; i < arguments.size(); i++)
-				{
-					filePath = filePath + " " + arguments.get(i);
-				}
-				model.loadProperties(filePath);				
 			}
 			else
 			{

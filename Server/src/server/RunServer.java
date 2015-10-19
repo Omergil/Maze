@@ -28,7 +28,7 @@ public class RunServer {
 		Presenter presenter = new Presenter(model, view);
 		model.addObserver(presenter);
 		view.addObserver(presenter);
-		MyTCPIPServer server = new MyTCPIPServer(9999, view, 10);
+		MyTCPIPServer server = new MyTCPIPServer(serverProperties.getPort(), view, 10);
 		
 		server.start();
 		

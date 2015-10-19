@@ -1,7 +1,5 @@
 package model;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +36,6 @@ import algorithms.search.Solution;
 import algorithms.search.State;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
-import presenter.ServerProperties;
 
 /**
  * Model object for MVP architecture, specifically for Maze3d.
@@ -564,25 +561,6 @@ public class Maze3dModel extends Observable implements Model {
 		} catch (IOException e) {
 			setChanged();
 			notifyObservers("Cannot load map.");
-		}
-	}
-
-	/**
-	 * Receives a path to an xml properties file and loads its content.
-	 */
-	@Override
-	public void loadProperties(String filePath) {
-		ServerProperties properties = new ServerProperties(filePath);
-		properties.load();
-		if (properties.isPropertiesSet())
-		{
-			setChanged();
-			notifyObservers(properties);
-		}
-		else
-		{
-			setChanged();
-			notifyObservers("Properties file is corrupted / doesn't exist.");
 		}
 	}
 	

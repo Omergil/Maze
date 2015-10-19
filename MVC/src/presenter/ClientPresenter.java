@@ -28,6 +28,7 @@ public class ClientPresenter implements Observer {
 
 	public void setHashMap() {
 		hashMap.put("properties", new LoadClientProperties());
+		hashMap.put("properties", new LoadProperties());
 		hashMap.put("exit", new Exit());
 	}
 
@@ -93,6 +94,29 @@ public class ClientPresenter implements Observer {
 		ArrayList<String> arguments = new ArrayList<String>();
 		arguments = new ArrayList<String>(Arrays.asList(userInput.split("\\s+")));
 		return arguments;
+	}
+	
+	/**
+	 * Loads the server's properties from the XML file.
+	 */
+	public class LoadProperties implements Command{
+
+		@Override
+		public void doCommand() {
+			if (arguments.size() >= 2)
+			{
+				String filePath = arguments.get(1);
+				for (int i = 2; i < arguments.size(); i++)
+				{
+					filePath = filePath + " " + arguments.get(i);
+				}
+				model.loadProperties(filePath);				
+			}
+			else
+			{
+				ui.displayData("Error occured for Load Properties funcionality.");
+			}
+		}
 	}
 	
 	/**

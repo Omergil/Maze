@@ -23,6 +23,5 @@ public interface Model {
 	ArrayList<String> displaySolution (String maze);
 	void saveMap();
 	void loadMap();
-	void loadProperties(String filePath);
 	void closeThreadPool();
 }

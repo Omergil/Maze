@@ -16,7 +16,7 @@ public class Run {
 		
 		ClientProperties clientProperties = new ClientProperties("ClientProperties.xml");
 		clientProperties.load();
-		ClientModel model = new ClientModel("localhost", 9999);
+		ClientModel model = new ClientModel(clientProperties.getHost(), clientProperties.getPort());
 
 		if (clientProperties.getView().equals("CLI"))
 		{

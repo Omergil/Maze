@@ -17,6 +17,7 @@ import java.io.Serializable;
 public class ServerProperties implements Serializable {
 	
 	String filePath;
+	int port;
 	boolean propertiesSet = false;
 	int numOfThreads;
 	
@@ -34,6 +35,22 @@ public class ServerProperties implements Serializable {
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	/**
+	 * Gets the port.
+	 * @return
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * Sets the port.
+	 * @param port
+	 */
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 	/**
@@ -78,7 +95,9 @@ public class ServerProperties implements Serializable {
 		try {
 			e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)));
 			numOfThreads = 20;
+			port = 9999;
 			e.writeObject(numOfThreads);
+			e.writeObject(port);
 			e.close();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -100,6 +119,7 @@ public class ServerProperties implements Serializable {
 			d = new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)));
 			try {
 				this.numOfThreads = (int)d.readObject();
+				this.port = (int)d.readObject();
 				propertiesSet = true;
 			} catch (Exception e) {
 				save();

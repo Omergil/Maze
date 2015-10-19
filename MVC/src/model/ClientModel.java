@@ -95,9 +95,8 @@ public class ClientModel extends Observable implements Model {
 	}
 
 	/**
-	 * Terminate the client session
+	 * Terminates the client session.
 	 */
-	
 	@Override
 	public void exit() {
 

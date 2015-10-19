@@ -24,6 +24,8 @@ public class ClientProperties implements Serializable {
 	int mazeHeight;
 	int mazeFloors;
 	String view;
+	String host;
+	int port;
 	
 	/**
 	 * Gets the file path.
@@ -145,6 +147,39 @@ public class ClientProperties implements Serializable {
 		this.view = view;
 	}
 
+	
+	/**
+	 * Gets the selected host property.
+	 * @return String - host.
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * Sets the selected host property.
+	 * @param host
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	/**
+	 * Gets the selected port property.
+	 * @return int - port.
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * Sets the selected port property.
+	 * @param port
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+
 	/**
 	 * Default constructor.
 	 */
@@ -168,12 +203,16 @@ public class ClientProperties implements Serializable {
 			mazeHeight = 8;
 			mazeFloors = 3;
 			view = "GUI";
+			host = "localhost";
+			port = 9999;
 			e.writeObject(mazeSolvingAlgorithm);
 			e.writeObject(mazeName);
 			e.writeObject(mazeWidth);
 			e.writeObject(mazeHeight);
 			e.writeObject(mazeFloors);
 			e.writeObject(view);
+			e.writeObject(host);
+			e.writeObject(port);
 			e.close();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -200,6 +239,8 @@ public class ClientProperties implements Serializable {
 				this.mazeHeight = (int)d.readObject();
 				this.mazeFloors = (int)d.readObject();
 				this.view = (String)d.readObject();
+				this.host = (String)d.readObject();
+				this.port = (int)d.readObject();
 				propertiesSet = true;
 			} catch (Exception e) {
 				save();
