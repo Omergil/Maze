@@ -1,5 +1,7 @@
 package model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,6 +49,7 @@ public class Maze3dModel extends Observable implements Model {
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	Object[][] solArray;
+	ArrayList<Object> solutionArray = new ArrayList<Object>();
 	ExecutorService exec;
 	
 	/**
@@ -464,7 +467,26 @@ public class Maze3dModel extends Observable implements Model {
 			maze3dnames = temp2.keySet();
 			Object[] tempmaze3namedarray = maze3dnames.toArray();
 			
-			//solution array allocation
+			Object[] innerArray = new Object[3];
+			for (int i=0; i < tempsolnamearray.length; i++)
+			{
+				innerArray[0] = tempsolnamearray[i];
+				innerArray[1] = tempsolarray[i];
+				solutionArray.add(innerArray);
+			}
+			
+			for(int i=0; i < solutionArray.size(); i++)
+			{
+				for(int j=0; j<tempmaze3namedarray.length; j++)
+				{
+					if (innerArray[0].equals(tempmaze3namedarray[j]))
+					{
+						innerArray[2] = tempmaze3darray[j];
+					}
+						
+				}
+			}
+			/*//solution array allocation
 			solArray = new Object[tempsolnamearray.length][3];
 			//add solutions, names and maze3d object to array 
 			for (int i=0; i < tempsolnamearray.length; i++)
@@ -476,13 +498,13 @@ public class Maze3dModel extends Observable implements Model {
 					if (solArray[i][0].equals(tempmaze3namedarray[j]))	
 						solArray[i][2] = tempmaze3darray[j];
 				}
-			}
+			}*/
 			
 			//save the solution array
 			ObjectOutputStream os = null;
 			try { 
 				os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
-				os.writeObject(solArray);
+				os.writeObject(solutionArray);
 				os.flush();
 				os.close();
 			} catch (IOException e) {
@@ -509,7 +531,9 @@ public class Maze3dModel extends Observable implements Model {
 				ObjectInputStream is = null;
 				try {
 						is = new ObjectInputStream(new GZIPInputStream(new FileInputStream("zipfile.zip")));
-						solArray = (Object[][])is.readObject();
+						solutionArray = (ArrayList<Object>)is.readObject();	
+						
+						//solArray = (Object[][])is.readObject();
 						is.close();
 						
 						//turn the Object[][] to hash map for solution store
