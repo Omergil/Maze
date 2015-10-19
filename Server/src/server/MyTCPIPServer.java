@@ -94,6 +94,7 @@ public class MyTCPIPServer {
 			
 			server.close();
 			System.out.println("Server is safely closed.");
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
