@@ -9,11 +9,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Observable;
 
+import model.Maze3dModel;
+
 public class MazeClientHandler extends Observable implements ClientHandler {
 
 	String userInput;
 	BufferedReader in;
 	ObjectOutputStream out;
+	Maze3dModel model;
 	
 	@Override
 	public void handleClient(InputStream inFromClient, OutputStream outToClient) {

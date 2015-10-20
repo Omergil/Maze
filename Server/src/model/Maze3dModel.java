@@ -27,6 +27,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
+
+import org.omg.PortableInterceptor.INACTIVE;
+
 import algorithms.demo.Maze3dSearchable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.MyMaze3dGenerator;
@@ -48,8 +51,9 @@ public class Maze3dModel extends Observable implements Model {
 	private static final int NUMOFTHREADS = 20;
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
-	Object[][] solArray;
+	//Object[][] solArray;
 	ArrayList<Object> solutionArray = new ArrayList<Object>();
+	Object[] innerArray = new Object[3];
 	ExecutorService exec;
 	
 	/**
@@ -442,77 +446,67 @@ public class Maze3dModel extends Observable implements Model {
 		val2 = mazeStore.isEmpty();
 		if(!(val1) && !(val2))
 		{
-			//turn stores to one array
-			//create array of solution
-			HashMap<String, Solution> temp = new HashMap<String,Solution>();
-			HashMap<String,Maze3d> temp2 = new HashMap<String,Maze3d>();
-			temp.putAll(solutionsStore);
-			temp2.putAll(mazeStore);
-			
-			//get solutions maze from solutionStore and put it to array
-			Collection<Solution> solutionmaze;
-			solutionmaze = temp.values();
-			Object[] tempsolarray = solutionmaze.toArray();
-			//get solutions maze name from solutionStore and put it to array
-			Collection<String> solutionmazenames;
-			solutionmazenames = temp.keySet();
-			Object[] tempsolnamearray = solutionmazenames.toArray();
-
-			//get maze3d object from mazeStore and put it to array
-			Collection<Maze3d> maze3dobject;
-			maze3dobject = temp2.values();
-			Object[] tempmaze3darray = maze3dobject.toArray();
-			//get maze3d name from mazeStore and put it to array
-			Collection<String> maze3dnames;
-			maze3dnames = temp2.keySet();
-			Object[] tempmaze3namedarray = maze3dnames.toArray();
-			
-			Object[] innerArray = new Object[3];
-			for (int i=0; i < tempsolnamearray.length; i++)
-			{
-				innerArray[0] = tempsolnamearray[i];
-				innerArray[1] = tempsolarray[i];
-				solutionArray.add(innerArray);
-			}
-			
-			for(int i=0; i < solutionArray.size(); i++)
-			{
-				for(int j=0; j<tempmaze3namedarray.length; j++)
+				//turn stores to one array
+				//create array of solution
+				HashMap<String, Solution> temp = new HashMap<String,Solution>();
+				HashMap<String,Maze3d> temp2 = new HashMap<String,Maze3d>();
+				temp.putAll(solutionsStore);
+				temp2.putAll(mazeStore);
+				
+				//get solutions maze from solutionStore and put it to array
+				Collection<Solution> solutionmaze;
+				solutionmaze = temp.values();
+				Object[] tempsolarray = solutionmaze.toArray();
+				//get solutions maze name from solutionStore and put it to array
+				Collection<String> solutionmazenames;
+				solutionmazenames = temp.keySet();
+				Object[] tempsolnamearray = solutionmazenames.toArray();
+	
+				//get maze3d object from mazeStore and put it to array
+				Collection<Maze3d> maze3dobject;
+				maze3dobject = temp2.values();
+				Object[] tempmaze3darray = maze3dobject.toArray();
+				//get maze3d name from mazeStore and put it to array
+				Collection<String> maze3dnames;
+				maze3dnames = temp2.keySet();
+				Object[] tempmaze3namedarray = maze3dnames.toArray();
+				
+				for (int i=0; i < tempsolnamearray.length; i++)
 				{
-					if (innerArray[0].equals(tempmaze3namedarray[j]))
+					innerArray[0] = tempsolnamearray[i];
+					innerArray[1] = tempsolarray[i];
+					solutionArray.add(innerArray);
+				}
+				
+				for(int i=0; i < solutionArray.size(); i++)
+				{
+					for(int j=0; j<tempmaze3namedarray.length; j++)
 					{
-						innerArray[2] = tempmaze3darray[j];
+						if (innerArray[0].equals(tempmaze3namedarray[j]))
+						{
+							innerArray[2] = tempmaze3darray[j];
+						}
+							
 					}
-						
 				}
-			}
-			/*//solution array allocation
-			solArray = new Object[tempsolnamearray.length][3];
-			//add solutions, names and maze3d object to array 
-			for (int i=0; i < tempsolnamearray.length; i++)
-			{
-				solArray[i][0] = tempsolnamearray[i];
-				solArray[i][1] = tempsolarray[i];
-				for(int j=0; j < tempmaze3namedarray.length;j++)
-				{
-					if (solArray[i][0].equals(tempmaze3namedarray[j]))	
-						solArray[i][2] = tempmaze3darray[j];
-				}
-			}*/
 			
-			//save the solution array
-			ObjectOutputStream os = null;
-			try { 
-				os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
-				os.writeObject(solutionArray);
-				os.flush();
-				os.close();
-			} catch (IOException e) {
-				//setChanged();
-				//notifyObservers("Cannot save map.");
-				e.printStackTrace();
+				//save the solution array
+				ObjectOutputStream os = null;
+				try {
+					//empty the file if it exist
+					File f = new File("zipfile.zip");
+					os = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("zipfile.zip")));
+					if(f.exists())
+						os.reset();
+					os.writeObject(solutionArray);
+					os.flush();
+					os.close();
+				} catch (IOException e) {
+					//setChanged();
+					//notifyObservers("Cannot save map.");
+					e.printStackTrace();
+				}
 			}
-		}
 
 	}
 	
@@ -523,7 +517,6 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void loadMap()
 	{ 
-		//File file = new File("zipfile.zip");
 		BufferedReader br;
 		try {
 			br = new BufferedReader(new FileReader("zipfile.zip"));
@@ -539,18 +532,20 @@ public class Maze3dModel extends Observable implements Model {
 						//turn the Object[][] to hash map for solution store
 						HashMap<String, Solution> soltempmap = new HashMap<String, Solution>();
 						HashMap<String, Maze3d> mazetempmap = new HashMap<String, Maze3d>();
-						for (int i=0; i<solArray[0].length; i++)
+						
+						for(int i=0; i<solutionArray.size();i++)
 						{
-							soltempmap.put(solArray[i][0].toString(), (Solution)solArray[i][1]);
+							innerArray = (Object[]) solutionArray.get(i);
+							soltempmap.put(innerArray[0].toString(), (Solution)innerArray[1]);
 						}
 						solutionsStore.putAll(soltempmap);
 						
 						//turn the Object[][] to hash map for maze store
-						for (int i=0; i<solArray[0].length; i++)
+						for(int i=0; i<solutionArray.size();i++)
 						{
-							mazetempmap.put(solArray[i][0].toString(), (Maze3d)solArray[i][2]);
-						}
-						
+							innerArray = (Object[]) solutionArray.get(i);
+							mazetempmap.put(innerArray[0].toString(), (Maze3d)innerArray[2]);
+						}	
 						mazeStore.putAll(mazetempmap);
 						
 				} catch (IOException e) {
@@ -599,4 +594,7 @@ public class Maze3dModel extends Observable implements Model {
 			e.printStackTrace();
 		}
 	}
+	
+
+	
 }
