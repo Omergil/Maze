@@ -8,11 +8,12 @@ import java.util.Observer;
 
 import model.Model;
 import view.ClientHandler;
+import view.View;
 
 public class Presenter implements Observer {
 
 	Model model;
-	ClientHandler view;
+	View view;
 	ArrayList<String> arguments;
 	HashMap<String, Command> hashMap = new HashMap<String, Command>();
 
@@ -21,7 +22,7 @@ public class Presenter implements Observer {
 	 * @param model
 	 * @param view
 	 */
-	public Presenter(Model model, ClientHandler view) {
+	public Presenter(Model model, View view) {
 		this.model = model;
 		this.view = view;
 		setHashMap();
@@ -42,6 +43,7 @@ public class Presenter implements Observer {
 		hashMap.put("solve", new Solve());
 		hashMap.put("savemap", new SaveMap());
 		hashMap.put("loadmap", new LoadMap());
+		hashMap.put("closeThreadPool", new CloseThreadPool());
 	}
 
 	/**
@@ -324,6 +326,17 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			model.loadMap();
+		}
+	}
+	
+	/**
+	 * Runs the Close Server operation in the model layer.
+	 */
+	public class CloseThreadPool implements Command{
+
+		@Override
+		public void doCommand() {
+			model.closeThreadPool();
 		}
 	}	
 }

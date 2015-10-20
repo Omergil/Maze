@@ -6,8 +6,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import presenter.ClientProperties;
 
 /**
@@ -20,10 +18,6 @@ public class ClientModel extends Observable implements Model {
 	Socket theServer;
 	boolean alreadyClosed = false;
 	boolean socketClosed = false;
-	
-	// DELETE THREADS???
-	int numOfThreads = 20;
-	ExecutorService exec = Executors.newFixedThreadPool(numOfThreads);
 
 	public ClientModel(String host, int port) {
 		try {
@@ -112,7 +106,6 @@ public class ClientModel extends Observable implements Model {
 				outToServer.flush();
 				outToServer.close();
 				theServer.close();
-				exec.shutdown();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();}

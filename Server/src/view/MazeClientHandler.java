@@ -11,7 +11,7 @@ import java.util.Observable;
 
 import model.Maze3dModel;
 
-public class MazeClientHandler extends Observable implements ClientHandler {
+public class MazeClientHandler extends Observable implements ClientHandler, View {
 
 	String userInput;
 	BufferedReader in;

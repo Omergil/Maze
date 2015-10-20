@@ -48,7 +48,6 @@ public class Maze3dModel extends Observable implements Model {
 	private static final int NUMOFTHREADS = 20;
 	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
 	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
-	//Object[][] solArray;
 	ArrayList<Object> solutionArray = new ArrayList<Object>();
 	Object[] innerArray = new Object[3];
 	ExecutorService exec;
@@ -60,22 +59,6 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	public Maze3dModel() {
 		exec = Executors.newFixedThreadPool(NUMOFTHREADS);
-	}
-	
-	/**
-	 * Default Constructor.
-	 * <p>
-	 * Sets the model with number of threads set by the administrator.
-	 */
-	public Maze3dModel(int numOfThreads) {
-		if (numOfThreads > 3)
-		{
-			exec = Executors.newFixedThreadPool(numOfThreads);
-		}
-		else
-		{
-			exec = Executors.newFixedThreadPool(NUMOFTHREADS);			
-		}		
 	}
 
 	/**
@@ -499,8 +482,6 @@ public class Maze3dModel extends Observable implements Model {
 					os.flush();
 					os.close();
 				} catch (IOException e) {
-					//setChanged();
-					//notifyObservers("Cannot save map.");
 					e.printStackTrace();
 				}
 			}
