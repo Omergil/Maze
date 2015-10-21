@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-
 import model.Model;
 import view.ClientHandler;
 import view.View;

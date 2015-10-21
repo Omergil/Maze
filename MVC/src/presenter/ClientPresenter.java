@@ -135,9 +135,4 @@ public class ClientPresenter implements Observer {
 			}
 		}
 	}
-	
-	
-	
-	
-	
 }

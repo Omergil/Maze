@@ -1,9 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-
-import algorithms.mazeGenerators.Maze3d;
-
 /**
  * Interface for Model layer in MVP architecture.
  * <p>

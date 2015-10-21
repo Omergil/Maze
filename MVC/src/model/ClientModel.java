@@ -36,12 +36,18 @@ public class ClientModel extends Observable implements Model {
 		getFromServer();
 	}
 
+	/**
+	 * Sends the user input to the server.
+	 */
 	@Override
 	public void sendToServer(String userInput) {
 		outToServer.println(userInput);
 		outToServer.flush();
 	}
 	
+	/**
+	 * Receives Object from the server and sends it to the presenter.
+	 */
 	@Override
 	public void getFromServer() {
 		new Thread(new Runnable() {
@@ -110,6 +116,4 @@ public class ClientModel extends Observable implements Model {
 		} catch (IOException e) {
 			e.printStackTrace();}
 	}
-	
-	
 }
