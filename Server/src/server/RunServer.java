@@ -5,6 +5,9 @@ import presenter.Presenter;
 import presenter.ServerProperties;
 import view.MazeClientHandlerCLI;
 
+/**
+ * Main method to run the server.
+ */
 public class RunServer {
 	
 	public static void main(String[] args) {
