@@ -46,19 +46,19 @@ import io.MyDecompressorInputStream;
 public class Maze3dModel extends Observable implements Model {
 
 	private static final int NUMOFTHREADS = 20;
-	HashMap<String, Maze3d> mazeStore = new HashMap<String, Maze3d>();
-	HashMap<String, Solution> solutionsStore = new HashMap<String, Solution>();
 	ArrayList<Object> solutionArray = new ArrayList<Object>();
 	Object[] innerArray = new Object[3];
 	ExecutorService exec;
+	Database database;
 	
 	/**
 	 * Default Constructor.
 	 * <p>
 	 * Sets the model with the default number of threads.
 	 */
-	public Maze3dModel() {
+	public Maze3dModel(Database database) {
 		exec = Executors.newFixedThreadPool(NUMOFTHREADS);
+		this.database = database;		
 	}
 
 	/**
@@ -103,14 +103,14 @@ public class Maze3dModel extends Observable implements Model {
 			@Override
 			public String call() throws Exception {
 				//check if the maze is already exist
-				if (mazeStore.containsKey(name))
+				if (database.getMazeStore().containsKey(name))
 				{
 					return "Maze already exist.";
 				}
 				//check that maze size is valid
 				else if ((width >= 2) && (height >= 2) && (floors >= 2))
 				{
-					mazeStore.put(name, new MyMaze3dGenerator(width, height, floors).generate());
+					database.putInMazeStore(name, new MyMaze3dGenerator(width, height, floors).generate());
 					return "Maze " + name + " is ready.";
 				}
 				else
@@ -150,9 +150,9 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public Maze3d display(String name) {
-		if (mazeStore.containsKey(name))
+		if (database.getMazeStore().containsKey(name))
 		{
-			return mazeStore.get(name);
+			return database.getMazeStore().get(name);
 		}
 		setChanged();
 		notifyObservers("Maze doesn't exist.");
@@ -168,19 +168,19 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public int[][] displayCrossSection(String coordinate, int index, String maze)
 	{
-		if (mazeStore.containsKey(maze))
+		if (database.getMazeStore().containsKey(maze))
 		{
 			if (coordinate.toLowerCase().equals("x"))
 			{
-				return mazeStore.get(maze).getCrossSectionByX(index);
+				return database.getMazeStore().get(maze).getCrossSectionByX(index);
 			}
 			else if (coordinate.toLowerCase().equals("y"))
 			{
-				return mazeStore.get(maze).getCrossSectionByY(index);
+				return database.getMazeStore().get(maze).getCrossSectionByY(index);
 			}
 			else if (coordinate.toLowerCase().equals("z"))
 			{
-				return mazeStore.get(maze).getCrossSectionByZ(index);
+				return database.getMazeStore().get(maze).getCrossSectionByZ(index);
 			}
 		}
 		setChanged();
@@ -198,7 +198,7 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void saveMaze(String name, String filename) {
 		//Check that the maze exist in the store
-		if (!mazeStore.containsKey(name))
+		if (!database.getMazeStore().containsKey(name))
 		{
 			setChanged();
 			notifyObservers("Maze doesn't exist.");
@@ -208,7 +208,7 @@ public class Maze3dModel extends Observable implements Model {
 		{
 			try{
 				OutputStream out = new MyCompressorOutputStream(new FileOutputStream(filename));
-				out.write(mazeStore.get(name).toByteArray());
+				out.write(database.getMazeStore().get(name).toByteArray());
 				out.flush();
 				out.close();
 				setChanged();
@@ -239,7 +239,7 @@ public class Maze3dModel extends Observable implements Model {
 				byte b[] = new byte[(int) new File(filename).length()];
 				in.read(b);
 				Maze3d load = new Maze3d(b);
-				mazeStore.put(name, load);
+				database.putInMazeStore(name, load);
 				in.close();
 				setChanged();
 				notifyObservers("Maze " + name + " was saved.");
@@ -259,7 +259,7 @@ public class Maze3dModel extends Observable implements Model {
 	@Override
 	public void mazeSize(String name) {
 		//Check that the maze exist
-		if (!mazeStore.containsKey(name))
+		if (!database.getMazeStore().containsKey(name))
 		{
 			setChanged();
 			notifyObservers("The maze doesn't exist.");
@@ -267,7 +267,7 @@ public class Maze3dModel extends Observable implements Model {
 		//calculate the size of maze
 		else
 		{
-			int size = mazeStore.get(name).toByteArray().length * 4;
+			int size = database.getMazeStore().get(name).toByteArray().length * 4;
 			setChanged();
 			notifyObservers("\"" + name + "\" maze size: " + size + " bytes.");
 		}
@@ -313,27 +313,27 @@ public class Maze3dModel extends Observable implements Model {
 			@Override
 			public String call() throws Exception {
 				//Check if the solution already exist
-				if (solutionsStore.containsKey(maze))
+				if (database.getSolutionsStore().containsKey(maze))
 				{
 					return "Solution already exists.";
 				}
 				//check that maze is in the store
-				if (mazeStore.containsKey(maze))
+				if (database.getMazeStore().containsKey(maze))
 				{
 					//solve maze by chosen solution
 					if (algorithm.toLowerCase().equals("bfs"))
 					{
-						solutionsStore.put(maze, new BFS().search(new Maze3dSearchable(mazeStore.get(maze))));
+						database.putInSolutionsStore(maze, new BFS().search(new Maze3dSearchable(database.getMazeStore().get(maze))));
 						return "Solution for " + maze + " is ready.";
 					}
 					else if (algorithm.toLowerCase().equals("manhattan"))
 					{
-						solutionsStore.put(maze, new AStar().search(new Maze3dSearchable(mazeStore.get(maze)), new MazeManhattanDistance()));
+						database.putInSolutionsStore(maze, new AStar().search(new Maze3dSearchable(database.getMazeStore().get(maze)), new MazeManhattanDistance()));
 						return "Solution for " + maze + " is ready.";
 					}
 					else if (algorithm.toLowerCase().equals("air"))
 					{
-						solutionsStore.put(maze, new AStar().search(new Maze3dSearchable(mazeStore.get(maze)), new MazeAirDistance()));
+						database.putInSolutionsStore(maze, new AStar().search(new Maze3dSearchable(database.getMazeStore().get(maze)), new MazeAirDistance()));
 						return "Solution for " + maze + " is ready.";
 					}
 				}
@@ -375,9 +375,9 @@ public class Maze3dModel extends Observable implements Model {
 	 */
 	@Override
 	public ArrayList<String> displaySolution(String maze) {
-		if (solutionsStore.containsKey(maze))
+		if (database.getSolutionsStore().containsKey(maze))
 		{
-			ArrayList<State> solutionStates = solutionsStore.get(maze).getSolution();
+			ArrayList<State> solutionStates = database.getSolutionsStore().get(maze).getSolution();
 			ArrayList<String> solutionStrings = new ArrayList<String>();
 			for (int i = solutionStates.size() - 1; i >= 0; i--)
 			{
@@ -422,16 +422,16 @@ public class Maze3dModel extends Observable implements Model {
 	public void saveMap()
 	{
 		boolean val1, val2;
-		val1 = solutionsStore.isEmpty();
-		val2 = mazeStore.isEmpty();
+		val1 = database.getSolutionsStore().isEmpty();
+		val2 = database.getMazeStore().isEmpty();
 		if(!(val1) && !(val2))
 		{
 				//turn stores to one array
 				//create array of solution
 				HashMap<String, Solution> temp = new HashMap<String,Solution>();
 				HashMap<String,Maze3d> temp2 = new HashMap<String,Maze3d>();
-				temp.putAll(solutionsStore);
-				temp2.putAll(mazeStore);
+				temp.putAll(database.getSolutionsStore());
+				temp2.putAll(database.getMazeStore());
 				
 				//get solutions maze from solutionStore and put it to array
 				Collection<Solution> solutionmaze;
@@ -516,7 +516,7 @@ public class Maze3dModel extends Observable implements Model {
 							innerArray = (Object[]) solutionArray.get(i);
 							soltempmap.put(innerArray[0].toString(), (Solution)innerArray[1]);
 						}
-						solutionsStore.putAll(soltempmap);
+						database.putAllInSolutionStore(soltempmap);
 						
 						//turn the Object[][] to hash map for maze store
 						for(int i=0; i<solutionArray.size();i++)
@@ -524,7 +524,7 @@ public class Maze3dModel extends Observable implements Model {
 							innerArray = (Object[]) solutionArray.get(i);
 							mazetempmap.put(innerArray[0].toString(), (Maze3d)innerArray[2]);
 						}	
-						mazeStore.putAll(mazetempmap);
+						database.putAllInMazeStore(mazetempmap);
 						
 				} catch (IOException e) {
 					e.printStackTrace();

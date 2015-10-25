@@ -1,28 +1,33 @@
 package server;
 
-import model.Maze3dModel;
-import presenter.Presenter;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import presenter.ServerProperties;
-import view.MazeClientHandlerCLI;
+import view.MazeClientHandler;
 
 /**
- * Main method to run the server.
+ * Main Class to run the server side.
  */
 public class RunServer {
 	
 	public static void main(String[] args) {
-		Maze3dModel model;
+		System.out.println("Server side.");
+		System.out.println("type \"close server\" to shut it down.");
 		ServerProperties serverProperties = new ServerProperties("ServerProperties.xml");
 		serverProperties.load();
-		model = new Maze3dModel();
+		MyTCPIPServer server = new MyTCPIPServer(serverProperties.getPort(), new MazeClientHandler(), serverProperties.getNumOfThreads());
 		
-		// Load the mazes from ZIP file - need to move
-		model.loadMap();
+		server.start();
 		
-		MazeClientHandlerCLI view = new MazeClientHandlerCLI(System.in, System.out, serverProperties.getPort(), serverProperties.getNumOfThreads());
-		Presenter presenter = new Presenter(model, view);
-		model.addObserver(presenter);
-		view.addObserver(presenter);
-		view.runCLI();
+		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+		try {
+			while(!(in.readLine()).equals("close server"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		server.close();
 	}
+
 }

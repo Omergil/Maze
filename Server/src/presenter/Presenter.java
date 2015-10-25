@@ -281,9 +281,22 @@ public class Presenter implements Observer {
 		@Override
 		public void doCommand() {
 			if ((arguments.get(1).equals("size")) && (arguments.size() == 3))
+			{
 				model.fileSize(arguments.get(2));
+			}
+			else if ((arguments.get(1).equals("size")) && (arguments.size() > 3))
+			{
+				String path = arguments.get(2);
+				for (int i = 3; i < arguments.size(); i++)
+				{
+					path += " " + arguments.get(i);
+				}
+				model.fileSize(path);
+			}
 			else
+			{
 				wrongInput();
+			}
 		}
 	}
 	
